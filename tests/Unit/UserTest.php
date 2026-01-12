@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+declare(strict_types = 1);
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -29,7 +29,7 @@ it('has correct fillable attributes', function () {
 });
 
 it('hides password and remember_token from array', function () {
-    $user = User::factory()->create();
+    $user      = User::factory()->create();
     $userArray = $user->toArray();
 
     expect($userArray)
@@ -39,7 +39,7 @@ it('hides password and remember_token from array', function () {
 
 it('hashes password when set', function () {
     $plainPassword = 'password123';
-    
+
     $user = User::factory()->create([
         'password' => $plainPassword,
     ]);
@@ -61,7 +61,7 @@ it('casts email_verified_at to datetime', function () {
 
 it('can be notified', function () {
     $user = User::factory()->create();
-    
+
     expect(method_exists($user, 'notify'))->toBeTrue();
 });
 
