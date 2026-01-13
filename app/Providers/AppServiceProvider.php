@@ -4,8 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
-use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -27,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         $this->setupLogViewer();
         $this->configModels();
         $this->configCommands();
+        $this->configUrls();
     }
 
     private function setupLogViewer(): void
@@ -44,8 +46,17 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict();
     }
 
-    private function configCommands(): void 
+    private function configCommands(): void
     {
-        DB::prohibitDestructiveCommands(app()->isProduction());
+        DB::prohibitDestructiveCommands(
+            app()->isProduction()
+        );
+    }
+
+    private function configUrls(): void
+    {
+        URL::forceHttps(
+            app()->isProduction()
+        );
     }
 }
