@@ -73,7 +73,10 @@
         "pre-package-uninstall": [
             "Illuminate\\Foundation\\ComposerScripts::prePackageUninstall"
         ],
-        "refactor": "./vendor/bin/rector"
+        "refact": [
+            "./vendor/bin/rector",
+            "./vendor/bin/pint"
+        ]
     },
     "extra": {
         "laravel": {
