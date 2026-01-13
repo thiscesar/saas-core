@@ -4,9 +4,11 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
-use Illuminate\Database\Eloquent\Model;
+use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -29,6 +31,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configModels();
         $this->configCommands();
         $this->configUrls();
+        $this->configDates();
     }
 
     private function setupLogViewer(): void
@@ -58,5 +61,10 @@ class AppServiceProvider extends ServiceProvider
         URL::forceHttps(
             app()->isProduction()
         );
+    }
+
+    private function configDates(): void 
+    {
+        Date::use(CarbonImmutable::class);
     }
 }
