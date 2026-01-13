@@ -25,7 +25,7 @@ class AppServiceProvider extends ServiceProvider
         $this->setupLogViewer();
     }
 
-    private function setupLogViewer(): void 
+    private function setupLogViewer(): void
     {
         LogViewer::auth(fn ($request): ?bool => $request->user()->is_admin);
     }

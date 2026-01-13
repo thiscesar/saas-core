@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Opcodes\LogViewer\Enums\SortingMethod;
 use Opcodes\LogViewer\Enums\SortingOrder;
 use Opcodes\LogViewer\Enums\Theme;
@@ -13,7 +15,7 @@ return [
     | Log Viewer can be disabled, so it's no longer accessible via browser.
     |
     */
- 
+
     'enabled' => env('LOG_VIEWER_ENABLED', true),
 
     'api_only' => env('LOG_VIEWER_API_ONLY', false),
@@ -97,7 +99,7 @@ return [
 
     'middleware' => [
         'web',
-        \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
+        Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
     ],
 
     /*
@@ -110,8 +112,8 @@ return [
     */
 
     'api_middleware' => [
-        \Opcodes\LogViewer\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-        \Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
+        Opcodes\LogViewer\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
+        Opcodes\LogViewer\Http\Middleware\AuthorizeLogViewer::class,
     ],
 
     'api_stateful_domains' => env('LOG_VIEWER_API_STATEFUL_DOMAINS') ? explode(',', env('LOG_VIEWER_API_STATEFUL_DOMAINS')) : null,
