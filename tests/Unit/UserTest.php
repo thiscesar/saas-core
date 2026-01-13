@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 uses(RefreshDatabase::class)->group('models');
 
-it('can be created with factory', function () {
+it('can be created with factory', function (): void {
     $user = User::factory()->create();
 
     expect($user)
@@ -22,13 +22,13 @@ it('can be created with factory', function () {
     ]);
 });
 
-it('has correct fillable attributes', function () {
+it('has correct fillable attributes', function (): void {
     $fillable = ['name', 'email', 'password'];
 
     expect((new User())->getFillable())->toBe($fillable);
 });
 
-it('hides password and remember_token from array', function () {
+it('hides password and remember_token from array', function (): void {
     $user      = User::factory()->create();
     $userArray = $user->toArray();
 
@@ -37,7 +37,7 @@ it('hides password and remember_token from array', function () {
         ->not->toHaveKey('remember_token');
 });
 
-it('hashes password when set', function () {
+it('hashes password when set', function (): void {
     $plainPassword = 'password123';
 
     $user = User::factory()->create([
@@ -50,7 +50,7 @@ it('hashes password when set', function () {
         ->toBeTrue();
 });
 
-it('casts email_verified_at to datetime', function () {
+it('casts email_verified_at to datetime', function (): void {
     $user = User::factory()->create([
         'email_verified_at' => now(),
     ]);
@@ -59,25 +59,25 @@ it('casts email_verified_at to datetime', function () {
         ->toBeInstanceOf(Illuminate\Support\Carbon::class);
 });
 
-it('can be notified', function () {
+it('can be notified', function (): void {
     $user = User::factory()->create();
 
     expect(method_exists($user, 'notify'))->toBeTrue();
 });
 
-it('requires name', function () {
+it('requires name', function (): void {
     User::factory()->create([
         'name' => null,
     ]);
 })->throws(Illuminate\Database\QueryException::class);
 
-it('requires email', function () {
+it('requires email', function (): void {
     User::factory()->create([
         'email' => null,
     ]);
 })->throws(Illuminate\Database\QueryException::class);
 
-it('requires unique email', function () {
+it('requires unique email', function (): void {
     $email = 'test@example.com';
 
     User::factory()->create(['email' => $email]);
@@ -85,18 +85,18 @@ it('requires unique email', function () {
     User::factory()->create(['email' => $email]);
 })->throws(Illuminate\Database\QueryException::class);
 
-it('requires password', function () {
+it('requires password', function (): void {
     User::factory()->create([
         'password' => null,
     ]);
 })->throws(Illuminate\Database\QueryException::class);
 
-it('uses HasFactory trait', function () {
+it('uses HasFactory trait', function (): void {
     expect(User::class)
         ->toUse(Illuminate\Database\Eloquent\Factories\HasFactory::class);
 });
 
-it('uses Notifiable trait', function () {
+it('uses Notifiable trait', function (): void {
     expect(User::class)
         ->toUse(Illuminate\Notifications\Notifiable::class);
 });
