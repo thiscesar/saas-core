@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -23,10 +24,21 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->setupLogViewer();
+        $this->configModels();
     }
 
     private function setupLogViewer(): void
     {
+        // Setup authentication in /logs route
         LogViewer::auth(fn ($request): ?bool => $request->user()->is_admin);
+    }
+
+    private function configModels(): void
+    {
+        // Remove the need of the property fillable
+        Model::unguard();
+
+        // Make sure that all properties being called exists
+        Model::shouldBeStrict();
     }
 }
