@@ -4,11 +4,13 @@ declare(strict_types = 1);
 
 namespace App\Providers;
 
+use App\Enums\Can;
 use Carbon\CarbonImmutable;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\URL;
-use Illuminate\Support\Facades\Date;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Date;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Opcodes\LogViewer\Facades\LogViewer;
 
@@ -32,6 +34,7 @@ class AppServiceProvider extends ServiceProvider
         $this->configCommands();
         $this->configUrls();
         $this->configDates();
+        $this->configGates();
     }
 
     private function setupLogViewer(): void
@@ -63,8 +66,21 @@ class AppServiceProvider extends ServiceProvider
         );
     }
 
-    private function configDates(): void 
+    private function configDates(): void
     {
         Date::use(CarbonImmutable::class);
+    }
+
+    private function configGates(): void
+    {
+        foreach (Can::cases() as $permission) {
+            Gate::define(
+                $permission->value,
+                fn ($user): bool => $user
+                    ->permissions()
+                    ->whereName($permission->value)
+                    ->exists()
+            );
+        }
     }
 }
