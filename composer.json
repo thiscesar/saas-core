@@ -13,7 +13,8 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "opcodesio/log-viewer": "^3.21",
-        "owen-it/laravel-auditing": "^14.0"
+        "owen-it/laravel-auditing": "^14.0",
+        "r2luna/brain": "^2.1"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
