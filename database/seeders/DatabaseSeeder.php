@@ -24,11 +24,13 @@ class DatabaseSeeder extends Seeder
         User::factory()->create([
             'name'  => 'Test User 1',
             'email' => 'test@example.com',
+            'password' => 'password1',
         ]);
 
         User::factory()->create([
             'name'     => 'Test User 2',
             'email'    => 'test2@example.com',
+            'password' => 'password2',
             'is_admin' => true,
         ]);
     }
