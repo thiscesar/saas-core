@@ -3,6 +3,7 @@
 declare(strict_types = 1);
 
 use App\Models\User;
+use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 
@@ -56,7 +57,7 @@ it('casts email_verified_at to datetime', function (): void {
     ]);
 
     expect($user->email_verified_at)
-        ->toBeInstanceOf(Illuminate\Support\Carbon::class);
+        ->toBeInstanceOf(CarbonInterface::class);
 });
 
 it('can be notified', function (): void {
