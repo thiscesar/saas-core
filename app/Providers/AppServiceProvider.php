@@ -50,6 +50,9 @@ class AppServiceProvider extends ServiceProvider
 
         // Make sure that all properties being called exists
         Model::shouldBeStrict();
+
+        //
+        Model::automaticallyEagerLoadRelationships();
     }
 
     private function configCommands(): void
