@@ -2,11 +2,8 @@
 
 declare(strict_types = 1);
 
-use App\Http\Controllers\LoginController;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', fn (): Illuminate\Contracts\View\Factory | \Illuminate\Contracts\View\View => view('welcome'));
 
-Route::get('/login', fn (): Illuminate\Contracts\View\Factory | \Illuminate\Contracts\View\View => view('login'))->name('login');
-Route::post('/login', LoginController::class)->name('login.store');
+Route::livewire('/login', 'pages::auth.login');
