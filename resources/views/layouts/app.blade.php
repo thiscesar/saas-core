@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body class="font-sans antialiased">
+    <body class="min-h-screen font-sans antialiased">
         {{-- Mobile Nav (hidden on desktop) --}}
         <x-nav sticky class="lg:hidden">
             <x-slot:brand>
@@ -26,7 +26,7 @@
         </x-nav>
 
         {{-- Main Container --}}
-        <x-main with-nav full-width>
+        <x-main full-width>
             {{-- Sidebar --}}
             <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200">
                 <div class="flex h-full flex-col">
