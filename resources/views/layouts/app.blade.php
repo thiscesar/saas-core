@@ -28,7 +28,7 @@
         {{-- Main Container --}}
         <x-main full-width>
             {{-- Sidebar --}}
-            <x-slot:sidebar drawer="main-drawer" collapsible class="bg-base-200">
+            <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="Recolher"  class="bg-base-200">
                 <div class="flex h-full flex-col">
                     {{-- Brand --}}
                     <div class="mb-5 ml-5 pt-5">
