@@ -25,6 +25,12 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 
+## Livewire Components
+- **ALWAYS use Multi-File Components (MFC)** for Livewire v4 components in this project.
+- When creating Livewire components, always use the `--mfc` flag: `php artisan make:livewire component-name --mfc`
+- Never create Single-File Components (SFC) unless explicitly requested by the user.
+- Page components should be created in the `pages::` namespace: `php artisan make:livewire pages::component-name --mfc`
+
 ## Verification Scripts
 - Do not create verification scripts or tinker when tests cover that functionality and prove it works. Unit and feature tests are more important.
 
