@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Validator;
 
 uses(RefreshDatabase::class)->group('unit', 'auth', 'validation');
 
-it('has correct validation rules', function () {
+it('has correct validation rules', function (): void {
     $request = new LoginRequest();
 
     expect($request->rules())->toBe([
@@ -17,13 +17,13 @@ it('has correct validation rules', function () {
     ]);
 });
 
-it('authorizes all requests', function () {
+it('authorizes all requests', function (): void {
     $request = new LoginRequest();
 
     expect($request->authorize())->toBeTrue();
 });
 
-it('validates required email', function (array $data, bool $shouldPass) {
+it('validates required email', function (array $data, bool $shouldPass): void {
     $request   = new LoginRequest();
     $validator = Validator::make($data, $request->rules());
 
@@ -47,7 +47,7 @@ it('validates required email', function (array $data, bool $shouldPass) {
     ],
 ]);
 
-it('validates email format', function (string $email, bool $shouldPass) {
+it('validates email format', function (string $email, bool $shouldPass): void {
     $request   = new LoginRequest();
     $validator = Validator::make(
         ['email' => $email, 'password' => 'password123'],
@@ -71,7 +71,7 @@ it('validates email format', function (string $email, bool $shouldPass) {
     'valid - with numbers'     => ['user123@example.com', true],
 ]);
 
-it('validates required password', function (array $data, bool $shouldPass) {
+it('validates required password', function (array $data, bool $shouldPass): void {
     $request   = new LoginRequest();
     $validator = Validator::make($data, $request->rules());
 
@@ -95,7 +95,7 @@ it('validates required password', function (array $data, bool $shouldPass) {
     ],
 ]);
 
-it('validates password minimum length', function (string $password, bool $shouldPass) {
+it('validates password minimum length', function (string $password, bool $shouldPass): void {
     $request   = new LoginRequest();
     $validator = Validator::make(
         ['email' => 'test@example.com', 'password' => $password],
@@ -116,7 +116,7 @@ it('validates password minimum length', function (string $password, bool $should
     'with special chars passes'     => ['p@ssw0rd!', true],
 ]);
 
-it('validates multiple fields at once', function (array $data, array $expectedErrors) {
+it('validates multiple fields at once', function (array $data, array $expectedErrors): void {
     $request   = new LoginRequest();
     $validator = Validator::make($data, $request->rules());
 

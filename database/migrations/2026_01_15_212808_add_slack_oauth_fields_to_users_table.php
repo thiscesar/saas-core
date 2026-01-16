@@ -13,7 +13,7 @@ return new class () extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->string('slack_id')->nullable()->unique()->after('email');
             $table->text('slack_access_token')->nullable()->after('slack_id');
             $table->text('slack_refresh_token')->nullable()->after('slack_access_token');
@@ -27,7 +27,7 @@ return new class () extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
+        Schema::table('users', function (Blueprint $table): void {
             $table->dropColumn(['slack_id', 'slack_access_token', 'slack_refresh_token', 'avatar_url']);
             $table->string('password')->nullable(false)->change();
         });

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use App\Brain\Auth\Processes\AuthProcess;
 use Illuminate\Validation\ValidationException;
 use Livewire\Attributes\Layout;
@@ -23,7 +25,7 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
 
         try {
             AuthProcess::dispatchSync([
-                'email' => $this->email,
+                'email'    => $this->email,
                 'password' => $this->password,
             ]);
 

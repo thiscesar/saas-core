@@ -42,7 +42,7 @@ class SlackAuthController extends Controller
             ]);
 
             return redirect()->intended('/dashboard');
-        } catch (InvalidStateException $e) {
+        } catch (InvalidStateException) {
             return redirect('/login')->with('error', 'Autenticação inválida. Por favor, tente novamente.');
         } catch (Exception $e) {
             Log::error('Slack OAuth error', ['exception' => $e]);
