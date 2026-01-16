@@ -86,10 +86,17 @@
                     {{-- Spacer to push content below to bottom --}}
                     <div class="flex-1"></div>
 
-                    {{-- Logout Button (bottom of sidebar) --}}
+                    {{-- Theme Toggle & Logout (bottom of sidebar) --}}
                     <x-menu-separator />
 
-                    <div class="px-5 py-4">
+                    <div class="px-5 py-4 space-y-3">
+                        {{-- Theme Toggle --}}
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm font-medium">Tema</span>
+                            <x-theme-toggle class="!w-auto" />
+                        </div>
+
+                        {{-- Logout Button --}}
                         <form action="/logout" method="POST">
                             @csrf
                             <x-button
