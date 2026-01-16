@@ -76,12 +76,7 @@
                 href="{{ route('auth.slack.redirect') }}"
                 class="flex w-full items-center justify-center gap-3 rounded-md border border-gray-300 bg-white px-4 py-2 font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
             >
-                <svg class="h-5 w-5" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M19.712,11.456a5.428,5.428 0 1,1 -10.856,0a5.428,5.428 0 0,1 10.856,0" fill="#36C5F0"/>
-                    <path d="M45.024,19.712a5.428,5.428 0 1,1 0,-10.856a5.428,5.428 0 0,1 0,10.856" fill="#2EB67D"/>
-                    <path d="M11.456,34.288a5.428,5.428 0 1,1 0,10.856a5.428,5.428 0 0,1 0,-10.856" fill="#ECB22E"/>
-                    <path d="M34.288,42.544a5.428,5.428 0 1,1 10.856,0a5.428,5.428 0 0,1 -10.856,0" fill="#E01E5A"/>
-                </svg>
+                <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-5 w-5">
                 <span>Entrar com Slack</span>
             </a>
 

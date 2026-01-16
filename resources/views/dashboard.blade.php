@@ -53,12 +53,7 @@
                                     <dd class="mt-1 text-sm text-gray-900">
                                         @if(auth()->user()->slack_id ?? null)
                                             <span class="inline-flex items-center gap-2 rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                                                <svg class="h-4 w-4" viewBox="0 0 54 54" xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M19.712,11.456a5.428,5.428 0 1,1 -10.856,0a5.428,5.428 0 0,1 10.856,0" fill="#36C5F0"/>
-                                                    <path d="M45.024,19.712a5.428,5.428 0 1,1 0,-10.856a5.428,5.428 0 0,1 0,10.856" fill="#2EB67D"/>
-                                                    <path d="M11.456,34.288a5.428,5.428 0 1,1 0,10.856a5.428,5.428 0 0,1 0,-10.856" fill="#ECB22E"/>
-                                                    <path d="M34.288,42.544a5.428,5.428 0 1,1 10.856,0a5.428,5.428 0 0,1 -10.856,0" fill="#E01E5A"/>
-                                                </svg>
+                                                <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-4 w-4">
                                                 Slack OAuth
                                             </span>
                                         @else
