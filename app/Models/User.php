@@ -44,6 +44,10 @@ class User extends Authenticatable implements Auditable
         'name',
         'email',
         'password',
+        'slack_id',
+        'slack_access_token',
+        'slack_refresh_token',
+        'avatar_url',
     ];
 
     /**
@@ -54,6 +58,8 @@ class User extends Authenticatable implements Auditable
     protected $hidden = [
         'password',
         'remember_token',
+        'slack_access_token',
+        'slack_refresh_token',
     ];
 
     /**
@@ -64,9 +70,11 @@ class User extends Authenticatable implements Auditable
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password'          => 'hashed',
-            'is_admin'          => 'boolean',
+            'email_verified_at'   => 'datetime',
+            'password'            => 'hashed',
+            'is_admin'            => 'boolean',
+            'slack_access_token'  => 'encrypted',
+            'slack_refresh_token' => 'encrypted',
         ];
     }
 }

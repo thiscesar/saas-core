@@ -24,7 +24,7 @@ it('can be created with factory', function (): void {
 });
 
 it('has correct fillable attributes', function (): void {
-    $fillable = ['name', 'email', 'password'];
+    $fillable = ['name', 'email', 'password', 'slack_id', 'slack_access_token', 'slack_refresh_token', 'avatar_url'];
 
     expect((new User())->getFillable())->toBe($fillable);
 });
@@ -35,7 +35,9 @@ it('hides password and remember_token from array', function (): void {
 
     expect($userArray)
         ->not->toHaveKey('password')
-        ->not->toHaveKey('remember_token');
+        ->not->toHaveKey('remember_token')
+        ->not->toHaveKey('slack_access_token')
+        ->not->toHaveKey('slack_refresh_token');
 });
 
 it('hashes password when set', function (): void {
@@ -86,11 +88,14 @@ it('requires unique email', function (): void {
     User::factory()->create(['email' => $email]);
 })->throws(Illuminate\Database\QueryException::class);
 
-it('requires password', function (): void {
-    User::factory()->create([
+it('allows null password for oauth users', function (): void {
+    $user = User::factory()->create([
         'password' => null,
+        'slack_id' => 'U12345678',
     ]);
-})->throws(Illuminate\Database\QueryException::class);
+
+    expect($user->password)->toBeNull();
+});
 
 it('uses HasFactory trait', function (): void {
     expect(User::class)

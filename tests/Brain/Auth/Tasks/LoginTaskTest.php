@@ -101,3 +101,56 @@ it('authenticates with case-sensitive email', function (): void {
     expect($task->user)->toBeInstanceOf(User::class)
         ->and(Auth::check())->toBeTrue();
 });
+
+it('logs in user directly when user property is set by previous task', function (): void {
+    $user = User::factory()->create();
+
+    $task = new LoginTask([
+        'email'    => '',  // Empty but present to satisfy Brain validation
+        'password' => '',
+    ]);
+
+    // Simulate a previous task setting the user property
+    $task->user = $user;
+
+    $task->handle();
+
+    expect(Auth::check())->toBeTrue();
+    expect(Auth::id())->toBe($user->id);
+});
+
+it('skips password attempt when user is set by oauth task', function (): void {
+    $user = User::factory()->create([
+        'email'    => 'oauth@example.com',
+        'password' => null, // OAuth-only user with no password
+    ]);
+
+    $task = new LoginTask([
+        'email'    => '',  // Empty but present to satisfy Brain validation
+        'password' => '',
+    ]);
+
+    // Simulate FindOrCreateUserFromSlackTask setting the user
+    $task->user = $user;
+
+    $task->handle();
+
+    expect(Auth::check())->toBeTrue();
+    expect(Auth::user()->id)->toBe($user->id);
+});
+
+it('still works with traditional email/password', function (): void {
+    $password = 'password123';
+    $user     = User::factory()->create([
+        'email'    => 'traditional@example.com',
+        'password' => $password,
+    ]);
+
+    $task = LoginTask::dispatchSync([
+        'email'    => 'traditional@example.com',
+        'password' => $password,
+    ]);
+
+    expect($task->user->id)->toBe($user->id);
+    expect(Auth::check())->toBeTrue();
+});

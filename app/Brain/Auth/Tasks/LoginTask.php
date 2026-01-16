@@ -13,8 +13,8 @@ use Illuminate\Validation\ValidationException;
 /**
  * Task LoginTask
  *
- * @property-read string $email
- * @property-read string $password
+ * @property-read string|null $email
+ * @property-read string|null $password
  *
  * @property User|null $user
  */
@@ -22,6 +22,15 @@ class LoginTask extends Task
 {
     public function handle(): self
     {
+        // If user is already authenticated by a previous task (e.g., OAuth), just log them in
+        if ($this->user) {
+            Auth::login($this->user);
+            Session::regenerate();
+
+            return $this;
+        }
+
+        // Otherwise, do traditional password authentication
         $credentials = [
             'email'    => $this->email,
             'password' => $this->password,

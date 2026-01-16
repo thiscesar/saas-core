@@ -43,4 +43,18 @@ class UserFactory extends Factory
             'email_verified_at' => null,
         ]);
     }
+
+    /**
+     * Indicate that the user was created via Slack OAuth.
+     */
+    public function withSlackAuth(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'slack_id'            => 'U' . fake()->unique()->numerify('########'),
+            'slack_access_token'  => 'xoxp-' . Str::random(40),
+            'slack_refresh_token' => 'xoxr-' . Str::random(40),
+            'avatar_url'          => fake()->imageUrl(),
+            'password'            => null,
+        ]);
+    }
 }
