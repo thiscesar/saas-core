@@ -8,9 +8,12 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
+use Mary\Traits\Toast;
 
 new #[Layout('layouts.auth'), Title('Login')] class extends Component
 {
+    use Toast;
+
     #[Validate('required|email')]
     public string $email = '';
 
@@ -29,9 +32,7 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
                 'password' => $this->password,
             ]);
 
-            session()->flash('status', 'Login realizado com sucesso!');
-
-            $this->redirect('/dashboard', navigate: true);
+            $this->success('Login realizado com sucesso!', redirectTo: '/dashboard');
         } catch (ValidationException $e) {
             $this->addError('email', $e->validator->errors()->first('email'));
         }

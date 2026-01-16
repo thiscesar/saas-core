@@ -6,118 +6,110 @@
     <title>Dashboard</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="bg-gray-100">
+<body class="min-h-screen bg-base-200 font-sans antialiased">
     <div class="min-h-screen">
-        <!-- Header -->
-        <header class="bg-white shadow">
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <div class="flex items-center justify-between">
-                    <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-                    <form action="/logout" method="POST">
-                        @csrf
-                        <button type="submit" class="rounded-md bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700">
-                            Sair
-                        </button>
-                    </form>
-                </div>
-            </div>
-        </header>
+        <x-header title="Dashboard" separator>
+            <x-slot:actions>
+                <form action="/logout" method="POST">
+                    @csrf
+                    <x-button
+                        label="Sair"
+                        icon="o-arrow-right-on-rectangle"
+                        type="submit"
+                        class="btn-error btn-sm"
+                        no-wire-navigate
+                    />
+                </form>
+            </x-slot:actions>
+        </x-header>
 
-        <!-- Main Content -->
-        <main>
-            <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-                <!-- Welcome Card -->
-                <div class="overflow-hidden rounded-lg bg-white shadow">
-                    <div class="px-4 py-5 sm:p-6">
-                        <div class="flex items-center gap-4">
-                            @if(auth()->user()->avatar_url ?? null)
-                                <img src="{{ auth()->user()->avatar_url }}" alt="Avatar" class="h-16 w-16 rounded-full">
-                            @else
-                                <div class="flex h-16 w-16 items-center justify-center rounded-full bg-blue-600 text-2xl font-bold text-white">
-                                    {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
-                                </div>
-                            @endif
-                            <div>
-                                <h2 class="text-2xl font-bold text-gray-900">
-                                    Olá, {{ auth()->user()->name }}!
-                                </h2>
-                                <p class="text-sm text-gray-600">{{ auth()->user()->email }}</p>
+        <main class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
+            <x-card shadow class="mb-6 bg-base-100">
+                <div class="flex items-center gap-4">
+                    @if(auth()->user()->avatar_url ?? null)
+                        <x-avatar image="{{ auth()->user()->avatar_url }}" class="w-16" />
+                    @else
+                        <x-avatar>
+                            <div class="flex h-16 w-16 items-center justify-center rounded-full bg-primary text-2xl font-bold text-primary-content">
+                                {{ strtoupper(substr(auth()->user()->name, 0, 1)) }}
                             </div>
-                        </div>
-
-                        <!-- User Info -->
-                        <div class="mt-6 border-t border-gray-200 pt-6">
-                            <dl class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">Método de Login</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">
-                                        @if(auth()->user()->slack_id ?? null)
-                                            <span class="inline-flex items-center gap-2 rounded-full bg-purple-100 px-3 py-1 text-xs font-medium text-purple-800">
-                                                <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-4 w-4">
-                                                Slack OAuth
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-800">
-                                                Email/Senha
-                                            </span>
-                                        @endif
-                                    </dd>
-                                </div>
-
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">Email Verificado</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">
-                                        @if(auth()->user()->email_verified_at)
-                                            <span class="inline-flex items-center rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-800">
-                                                ✓ Verificado
-                                            </span>
-                                        @else
-                                            <span class="inline-flex items-center rounded-full bg-yellow-100 px-3 py-1 text-xs font-medium text-yellow-800">
-                                                Pendente
-                                            </span>
-                                        @endif
-                                    </dd>
-                                </div>
-
-                                @if(auth()->user()->slack_id ?? null)
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">Slack ID</dt>
-                                    <dd class="mt-1 text-sm font-mono text-gray-900">{{ auth()->user()->slack_id }}</dd>
-                                </div>
-                                @endif
-
-                                <div>
-                                    <dt class="text-sm font-medium text-gray-500">Membro desde</dt>
-                                    <dd class="mt-1 text-sm text-gray-900">{{ auth()->user()->created_at->format('d/m/Y') }}</dd>
-                                </div>
-                            </dl>
-                        </div>
+                        </x-avatar>
+                    @endif
+                    <div>
+                        <h2 class="text-2xl font-bold">
+                            Olá, {{ auth()->user()->name }}!
+                        </h2>
+                        <p class="text-sm text-base-content/70">{{ auth()->user()->email }}</p>
                     </div>
                 </div>
 
-                <!-- Stats -->
-                <div class="mt-6 grid grid-cols-1 gap-5 sm:grid-cols-3">
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Total de Logins</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                            {{ auth()->user()->logins()->count() }}
+                <x-hr class="my-6" />
+
+                <div class="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
+                    <div>
+                        <dt class="text-sm font-medium text-base-content/70">Método de Login</dt>
+                        <dd class="mt-1">
+                            @if(auth()->user()->slack_id ?? null)
+                                <x-badge value="Slack OAuth" class="badge-secondary gap-2">
+                                    <x-slot:prepend>
+                                        <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-4 w-4">
+                                    </x-slot:prepend>
+                                </x-badge>
+                            @else
+                                <x-badge value="Email/Senha" class="badge-primary" />
+                            @endif
                         </dd>
                     </div>
 
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Último Login</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                            {{ auth()->user()->logins()->latest()->first()?->created_at?->diffForHumans() ?? 'Agora' }}
+                    <div>
+                        <dt class="text-sm font-medium text-base-content/70">Email Verificado</dt>
+                        <dd class="mt-1">
+                            @if(auth()->user()->email_verified_at)
+                                <x-badge value="✓ Verificado" class="badge-success" />
+                            @else
+                                <x-badge value="Pendente" class="badge-warning" />
+                            @endif
                         </dd>
                     </div>
 
-                    <div class="overflow-hidden rounded-lg bg-white px-4 py-5 shadow sm:p-6">
-                        <dt class="truncate text-sm font-medium text-gray-500">Tipo de Conta</dt>
-                        <dd class="mt-1 text-3xl font-semibold tracking-tight text-gray-900">
-                            {{ (auth()->user()->is_admin ?? false) ? 'Admin' : 'Usuário' }}
-                        </dd>
+                    @if(auth()->user()->slack_id ?? null)
+                    <div>
+                        <dt class="text-sm font-medium text-base-content/70">Slack ID</dt>
+                        <dd class="mt-1 font-mono text-sm">{{ auth()->user()->slack_id }}</dd>
+                    </div>
+                    @endif
+
+                    <div>
+                        <dt class="text-sm font-medium text-base-content/70">Membro desde</dt>
+                        <dd class="mt-1 text-sm">{{ auth()->user()->created_at->format('d/m/Y') }}</dd>
                     </div>
                 </div>
+            </x-card>
+
+            <div class="grid grid-cols-1 gap-5 sm:grid-cols-3">
+                <x-stat
+                    title="Total de Logins"
+                    description="Quantidade de acessos"
+                    value="{{ auth()->user()->logins()->count() }}"
+                    icon="o-users"
+                    color="text-primary"
+                />
+
+                <x-stat
+                    title="Último Login"
+                    description="Último acesso realizado"
+                    value="{{ auth()->user()->logins()->latest()->first()?->created_at?->diffForHumans() ?? 'Agora' }}"
+                    icon="o-clock"
+                    color="text-secondary"
+                />
+
+                <x-stat
+                    title="Tipo de Conta"
+                    description="Nível de acesso"
+                    value="{{ (auth()->user()->is_admin ?? false) ? 'Admin' : 'Usuário' }}"
+                    icon="o-shield-check"
+                    color="text-accent"
+                />
             </div>
         </main>
     </div>

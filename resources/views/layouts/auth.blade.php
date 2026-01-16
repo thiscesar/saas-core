@@ -7,12 +7,10 @@
         <title>{{ $title ?? config('app.name') }}</title>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-        @livewireStyles
     </head>
-    <body data-layout="auth">
+    <body data-layout="auth" class="font-sans antialiased">
         {{ $slot }}
 
-        @livewireScripts
+        <x-toast />
     </body>
 </html>
