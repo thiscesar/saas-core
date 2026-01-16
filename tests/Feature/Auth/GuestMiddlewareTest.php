@@ -42,7 +42,7 @@ it('redirects authenticated users from slack redirect to dashboard', function ()
     $response->assertRedirect('/dashboard');
 });
 
-it('logs out user and redirects to home', function (): void {
+it('logs out user and redirects to login', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -51,6 +51,6 @@ it('logs out user and redirects to home', function (): void {
 
     $response = $this->post('/logout');
 
-    $response->assertRedirect('/');
+    $response->assertRedirect('/login');
     $this->assertGuest();
 });

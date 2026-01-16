@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Http\Controllers\Auth\SlackAuthController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', fn (): Illuminate\Contracts\View\Factory | \Illuminate\Contracts\View\View => view('welcome'));
+Route::get('/', fn () => auth()->check() ? redirect('/dashboard') : redirect('/login'))->name('home');
 
 // Guest routes (redirect to dashboard if authenticated)
 Route::middleware('guest')->group(function () {
@@ -27,6 +27,6 @@ Route::middleware('auth')->group(function () {
         request()->session()->invalidate();
         request()->session()->regenerateToken();
 
-        return redirect('/');
+        return redirect('/login');
     })->name('logout');
 });
