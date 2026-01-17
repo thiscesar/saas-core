@@ -1,14 +1,17 @@
-<div class="mx-auto max-w-4xl space-y-6">
-    {{-- Profile Header --}}
-    <div class="flex items-center gap-4">
-        <x-user-avatar :user="auth()->user()" class="!w-20" />
-
-        <div>
-            <h1 class="text-3xl font-bold">Configurações</h1>
-            <p class="text-base-content/70">Gerencie suas informações pessoais e senha</p>
+<div>
+    {{-- Page Header --}}
+    <div class="mb-5 px-5 lg:mb-6 lg:px-6">
+        <div class="flex items-center justify-between">
+            <h1 class="text-2xl font-bold lg:text-3xl">Configurações</h1>
+            {{-- Espaço para ações futuras --}}
         </div>
     </div>
 
+    {{-- Header Divider --}}
+    <div class="mb-6 border-t border-base-300"></div>
+
+    {{-- Main Content --}}
+    <div class="max-w-5xl space-y-6">
     {{-- Profile Information Card --}}
     <x-card title="Informações do Perfil" shadow>
         <form wire:submit="updateProfile">
@@ -140,4 +143,6 @@
             </div>
         </div>
     </x-card>
+    </div>
+    {{-- End Main Content --}}
 </div>
