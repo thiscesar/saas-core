@@ -36,6 +36,22 @@ class User extends Authenticatable implements Auditable
     }
 
     /**
+     * Get user initials for avatar placeholder.
+     */
+    public function getInitials(): string
+    {
+        return strtoupper(substr($this->name, 0, 1));
+    }
+
+    /**
+     * Get user avatar URL.
+     */
+    public function getAvatarUrl(): ?string
+    {
+        return $this->attributes['avatar_url'] ?? null;
+    }
+
+    /**
      * The attributes that are mass assignable.
      *
      * @var list<string>
