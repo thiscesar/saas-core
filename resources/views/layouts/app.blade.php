@@ -40,21 +40,11 @@
                     {{-- User Profile Section --}}
                     <div class="px-5 py-4">
                         <div class="flex items-center gap-3">
-                            @php
-                                $user = auth()->user();
-                                $initials = strtoupper(substr($user->name, 0, 1));
-                                $avatarUrl = $user->avatar_url ?? null;
-                            @endphp
-
-                            <x-avatar
-                                :image="$avatarUrl"
-                                :placeholder="$initials"
-                                class="!w-10"
-                            />
+                            <x-user-avatar :user="auth()->user()" class="!w-10" />
 
                             <div class="min-w-0 flex-1">
-                                <div class="truncate text-sm font-semibold">{{ $user->name }}</div>
-                                <div class="truncate text-xs text-base-content/70">{{ $user->email }}</div>
+                                <div class="truncate text-sm font-semibold">{{ auth()->user()->name }}</div>
+                                <div class="truncate text-xs text-base-content/70">{{ auth()->user()->email }}</div>
                             </div>
                         </div>
                     </div>
