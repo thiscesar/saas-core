@@ -21,6 +21,7 @@ Route::get('/auth/slack/callback', [SlackAuthController::class, 'callback'])
 // Authenticated routes
 Route::middleware('auth')->group(function () {
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
+    Route::livewire('/settings', 'pages::profile')->name('settings');
 
     Route::post('/logout', function () {
         auth()->logout();
