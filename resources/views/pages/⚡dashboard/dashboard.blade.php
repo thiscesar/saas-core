@@ -2,11 +2,7 @@
     {{-- Welcome Card --}}
     <x-card shadow class="mb-6 bg-base-100">
         <div class="flex items-center gap-4">
-            <x-avatar
-                :image="$this->avatarUrl()"
-                :placeholder="$this->initials()"
-                class="!w-16"
-            />
+            <x-user-avatar :user="auth()->user()" class="!w-16" />
 
             <div>
                 <h2 class="text-2xl font-bold">
