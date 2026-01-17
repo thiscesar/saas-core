@@ -26,7 +26,7 @@
         </x-nav>
 
         {{-- Main Container --}}
-        <x-main full-width>
+        <x-main>
             {{-- Sidebar --}}
             <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="Recolher"  class="bg-base-200">
                 <div class="flex h-full flex-col">
