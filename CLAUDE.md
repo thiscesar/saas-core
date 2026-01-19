@@ -40,6 +40,7 @@ This application is a Laravel application and its main Laravel ecosystems packag
   - `docs:` - Documentation changes
   - `chore:` - Build process, dependencies, or tooling changes
 - Do **not** use scopes (no parentheses like `feat(auth):`).
+- Do **not** add co-authorship information (Co-Authored-By) to commits.
 - Keep messages concise and descriptive.
 - Examples:
   - `feat: add user avatar component`
