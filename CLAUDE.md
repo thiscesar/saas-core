@@ -11,6 +11,9 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - php - 8.3.29
 - laravel/framework (LARAVEL) - v12
 - laravel/prompts (PROMPTS) - v0
+- livewire/livewire (LIVEWIRE) - v4
+- robsontenorio/mary (MARY) - v2
+- r2luna/brain (BRAIN) - v2
 - larastan/larastan (LARASTAN) - v3
 - laravel/mcp (MCP) - v0
 - laravel/pint (PINT) - v1
@@ -25,11 +28,40 @@ This application is a Laravel application and its main Laravel ecosystems packag
 - Use descriptive names for variables and methods. For example, `isRegisteredForDiscounts`, not `discount()`.
 - Check for existing components to reuse before writing a new one.
 
+### Git Commit Conventions
+- This project follows a Conventional Commits style with specific conventions.
+- Commit messages must be in **English**, lowercase, short and objective.
+- Use the following prefixes:
+  - `feat:` - New features or functionality
+  - `fix:` - Bug fixes
+  - `refact:` - Code refactoring (note: uses `refact:` not `refactor:`)
+  - `style:` - UI/styling changes (CSS, Tailwind, visual updates)
+  - `test:` - Adding or updating tests
+  - `docs:` - Documentation changes
+  - `chore:` - Build process, dependencies, or tooling changes
+- Do **not** use scopes (no parentheses like `feat(auth):`).
+- Keep messages concise and descriptive.
+- Examples:
+  - `feat: add user avatar component`
+  - `fix: mobile sidebar style`
+  - `refact: update dashboard component with new avatar component`
+  - `test: user crud`
+  - `style: applies titles and spacing standards`
+
 ## Livewire Components
 - **ALWAYS use Multi-File Components (MFC)** for Livewire v4 components in this project.
 - When creating Livewire components, always use the `--mfc` flag: `php artisan make:livewire component-name --mfc`
 - Never create Single-File Components (SFC) unless explicitly requested by the user.
 - Page components should be created in the `pages::` namespace: `php artisan make:livewire pages::component-name --mfc`
+
+## Mary UI Components
+- This application uses **Mary UI** (robsontenorio/mary v2) for Livewire component styling and UI elements.
+- Mary provides pre-built, beautiful Livewire components that follow Tailwind CSS and DaisyUI conventions.
+- Always check existing components for Mary UI usage patterns before creating custom UI elements.
+- Use Mary traits in Livewire components when appropriate (e.g., `use Mary\Traits\Toast;` for notifications).
+- Common Mary components: `<x-button>`, `<x-input>`, `<x-form>`, `<x-card>`, etc.
+- For notifications, use `$this->success()`, `$this->error()`, `$this->warning()`, `$this->info()` methods from the Toast trait.
+- Consult Mary UI documentation using `search-docs` tool when implementing forms, tables, or other UI components.
 
 ## Verification Scripts
 - Do not create verification scripts or tinker when tests cover that functionality and prove it works. Unit and feature tests are more important.
@@ -37,6 +69,8 @@ This application is a Laravel application and its main Laravel ecosystems packag
 ## Application Structure & Architecture
 - Stick to existing directory structure; don't create new base folders without approval.
 - Do not change the application's dependencies without approval.
+- Business logic is organized in `app/Brain/` using the Brain architecture pattern (see Brain Architecture section).
+- Domain modules are organized by feature (e.g., `app/Brain/User/`, `app/Brain/Auth/`) containing their Processes and Tasks.
 
 ## Frontend Bundling
 - If the user doesn't see a frontend change reflected in the UI, it could mean they need to run `npm run build`, `npm run dev`, or `composer run dev`. Ask them.
@@ -129,6 +163,72 @@ protected function isAccessible(User $user, ?string $path = null): bool
 - If you're creating a generic PHP class, use `php artisan make:class`.
 - Pass `--no-interaction` to all Artisan commands to ensure they work without user input. You should also pass the correct `--options` to ensure correct behavior.
 
+## Brain Architecture
+
+This application uses the **Brain** package (r2luna/brain v2) for organizing business logic using a process-driven architecture pattern.
+
+### Processes
+- Processes orchestrate one or more Tasks to complete a business operation.
+- Located in `app/Brain/{Domain}/Processes/` (e.g., `app/Brain/User/Processes/CreateUserProcess.php`).
+- Extend `Brain\Process` and define tasks in the `$tasks` array property.
+- Execute using `ProcessName::dispatchSync($data)` or `ProcessName::dispatch($data)` for async execution.
+- Data is passed as an array and becomes accessible in all tasks.
+
+<code-snippet name="Example Process" lang="php">
+namespace App\Brain\User\Processes;
+
+use App\Brain\User\Tasks\CreateUserTask;
+use Brain\Process;
+
+class CreateUserProcess extends Process
+{
+    protected array $tasks = [
+        CreateUserTask::class,
+    ];
+}
+</code-snippet>
+
+### Tasks
+- Tasks are single-responsibility units of work that perform one specific operation.
+- Located in `app/Brain/{Domain}/Tasks/` (e.g., `app/Brain/User/Tasks/CreateUserTask.php`).
+- Extend `Brain\Task` and implement a `handle(): self` method.
+- Access input data as properties using `$this->propertyName`.
+- Store results as properties to make them available to subsequent tasks.
+- Document input/output properties using PHPDoc `@property-read` and `@property` annotations.
+
+<code-snippet name="Example Task" lang="php">
+namespace App\Brain\User\Tasks;
+
+use App\Models\User;
+use Brain\Task;
+
+/**
+ * @property-read string $name
+ * @property-read string $email
+ * @property-read string $password
+ * @property User $user
+ */
+class CreateUserTask extends Task
+{
+    public function handle(): self
+    {
+        $this->user = User::create([
+            'name'     => $this->name,
+            'email'    => $this->email,
+            'password' => bcrypt($this->password),
+        ]);
+
+        return $this;
+    }
+}
+</code-snippet>
+
+### When to Use Brain
+- Use Processes/Tasks for complex business logic that involves multiple steps.
+- Use Processes/Tasks when you need to coordinate multiple operations.
+- Check existing Processes in `app/Brain/` before creating new ones to avoid duplication.
+- Follow the existing domain organization (User, Auth, etc.) when creating new Processes/Tasks.
+
 ### Database
 - Always use proper Eloquent relationship methods with return type hints. Prefer relationship methods over raw queries or manual joins.
 - Use Eloquent models and relationships before suggesting raw database queries.
@@ -142,9 +242,14 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ### APIs & Eloquent Resources
 - For APIs, default to using Eloquent API Resources and API versioning unless existing API routes do not, then you should follow existing application convention.
 
-### Controllers & Validation
-- Always create Form Request classes for validation rather than inline validation in controllers. Include both validation rules and custom error messages.
-- Check sibling Form Requests to see if the application uses array or string based validation rules.
+### Livewire Components & Validation
+- This is a **Full Livewire** application using Multi-File Components (MFC), not traditional controllers with Form Requests.
+- Components are located in `resources/views/pages/` and use the `pages::` namespace for page components.
+- Each MFC component has a `.php` file (anonymous class extending `Livewire\Component`) and a `.blade.php` template.
+- Always use `#[Validate()]` attributes directly on component properties for validation.
+- Use string-based validation rules (e.g., `#[Validate('required|email')]`), following the existing convention in sibling components.
+- Call `$this->validate()` before processing form data in component methods.
+- Include appropriate validation rules and rely on Laravel's default error messages unless custom messages are needed.
 
 ### Queues
 - Use queued jobs for time-consuming operations with the `ShouldQueue` interface.
