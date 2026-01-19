@@ -40,3 +40,23 @@
 .mary-table-pagination button {
     @apply cursor-pointer
 }
+
+/**
+* Sidebar collapsed adjustments
+* Applied when sidebar width is 62px
+*/
+
+/* Reduce padding and adjust layout when sidebar is collapsed */
+.w-\[62px\] .mary-sidebar-section,
+.\!w-\[62px\] .mary-sidebar-section {
+    padding-left: 0.5rem !important;
+    padding-right: 0.5rem !important;
+}
+
+/* Ensure buttons fit within collapsed sidebar */
+.w-\[62px\] .mary-sidebar-section .btn,
+.\!w-\[62px\] .mary-sidebar-section .btn {
+    min-width: auto !important;
+    padding-left: 0.75rem !important;
+    padding-right: 0.75rem !important;
+}

@@ -31,18 +31,18 @@
             <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="Recolher">
                 <div class="flex h-full flex-col">
                     {{-- Brand --}}
-                    <div class="mb-5 ml-5 pt-5">
+                    <div class="mary-hideable mb-5 ml-5 pt-5">
                         <div class="text-xl font-bold">{{ config('app.name') }}</div>
                     </div>
 
                     <x-menu-separator />
 
                     {{-- User Profile Section --}}
-                    <div class="px-5 py-4">
-                        <div class="flex items-center gap-3">
+                    <div class="mary-sidebar-section px-5 py-4">
+                        <div class="flex items-center justify-center gap-3">
                             <x-user-avatar :user="auth()->user()" class="!w-10" />
 
-                            <div class="min-w-0 flex-1">
+                            <div class="mary-hideable min-w-0 flex-1">
                                 <div class="truncate text-sm font-semibold">{{ auth()->user()->name }}</div>
                                 <div class="truncate text-xs text-base-content/70">{{ auth()->user()->email }}</div>
                             </div>
@@ -79,10 +79,10 @@
                     {{-- Theme Toggle & Logout (bottom of sidebar) --}}
                     <x-menu-separator />
 
-                    <div class="px-5 py-4 space-y-3">
+                    <div class="mary-sidebar-section px-5 py-4 space-y-3">
                         {{-- Theme Toggle --}}
-                        <div class="flex items-center justify-between">
-                            <span class="text-sm font-medium">Tema</span>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="mary-hideable text-sm font-medium">Tema</span>
                             <x-theme-toggle class="!w-auto" />
                         </div>
 
@@ -90,12 +90,14 @@
                         <form action="/logout" method="POST">
                             @csrf
                             <x-button
-                                label="Sair"
                                 icon="o-arrow-right-on-rectangle"
+                                icon-class="w-5 h-5"
                                 type="submit"
-                                class="btn-error btn-sm w-full"
+                                class="btn-error btn-md w-full justify-center"
                                 no-wire-navigate
-                            />
+                            >
+                                <span class="mary-hideable ml-2">Sair</span>
+                            </x-button>
                         </form>
                     </div>
                 </div>
