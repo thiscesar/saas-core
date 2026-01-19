@@ -20,8 +20,6 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
     #[Validate('required')]
     public string $password = '';
 
-    public bool $remember = false;
-
     public function login(): void
     {
         $this->validate();

@@ -26,11 +26,6 @@
                     inline
                 />
 
-                <x-checkbox
-                    label="Lembrar de mim"
-                    wire:model="remember"
-                />
-
                 <x-slot:actions>
                     <x-button
                         label="Entrar"
