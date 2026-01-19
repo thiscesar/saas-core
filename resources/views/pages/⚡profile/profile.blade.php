@@ -13,7 +13,7 @@
     {{-- Main Content --}}
     <div class="max-w-5xl space-y-6">
     {{-- Profile Information Card --}}
-    <x-card title="Informações do Perfil" shadow>
+    <x-card title="Informações do Perfil" shadow class="bg-base-100">
         <form wire:submit="updateProfile">
             <div class="space-y-4">
                 <x-input
@@ -54,7 +54,7 @@
 
     {{-- Change Password Card --}}
     @if(!auth()->user()->slack_id)
-        <x-card title="Alterar Senha" shadow>
+        <x-card title="Alterar Senha" shadow class="bg-base-100">
             <form wire:submit="updatePassword">
                 <div class="space-y-4">
                     <x-alert icon="o-shield-check" class="alert-warning">
@@ -98,7 +98,7 @@
             </form>
         </x-card>
     @else
-        <x-card title="Autenticação" shadow>
+        <x-card title="Autenticação" shadow class="bg-base-100">
             <x-alert icon="o-information-circle" class="alert-info">
                 Você está autenticado via Slack OAuth. A senha é gerenciada pela sua conta do Slack.
             </x-alert>
@@ -106,7 +106,7 @@
     @endif
 
     {{-- Account Info --}}
-    <x-card title="Informações da Conta" shadow>
+    <x-card title="Informações da Conta" shadow class="bg-base-100">
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
                 <dt class="text-sm font-medium text-base-content/70">Membro desde</dt>
