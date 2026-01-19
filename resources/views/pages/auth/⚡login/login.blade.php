@@ -26,18 +26,16 @@
                     inline
                 />
 
-                <x-slot:actions>
-                    <x-button
-                        label="Entrar"
-                        type="submit"
-                        icon="o-arrow-right-on-rectangle"
-                        class="btn-primary w-full"
-                        spinner="login"
-                    />
-                </x-slot:actions>
+                <x-button
+                    label="Entrar"
+                    type="submit"
+                    icon="o-arrow-right-on-rectangle"
+                    class="btn-primary w-full"
+                    spinner="login"
+                />
             </x-form>
 
-            <x-hr text="Ou continue com" class="my-6" />
+            <div class="divider my-6">Ou continue com</div>
 
             <a
                 href="{{ route('auth.slack.redirect') }}"
