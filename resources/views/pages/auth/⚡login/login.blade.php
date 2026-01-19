@@ -35,7 +35,7 @@
                 />
             </x-form>
 
-            <div class="divider my-6">Ou continue com</div>
+            <div class="divider my-6">Ou</div>
 
             <a
                 href="{{ route('auth.slack.redirect') }}"
