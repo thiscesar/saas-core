@@ -58,10 +58,7 @@
 
                         {{-- Users Submenu (Admin only) --}}
                         @if(auth()->user()->is_admin ?? false)
-                            <x-menu-sub title="Usuários" icon="o-users">
-                                <x-menu-item title="Todos os Usuários" icon="o-users" link="/users" />
-                                <x-menu-item title="Adicionar Usuário" icon="o-plus-circle" link="/users/create" />
-                            </x-menu-sub>
+                            <x-menu-item title="Usuários" icon="o-users" link="/users" />
                         @endif
 
                         <x-menu-separator />
