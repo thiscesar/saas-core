@@ -1,4 +1,4 @@
-<div class="flex min-h-screen items-center justify-center bg-base-200">
+<div data-theme="light" class="flex min-h-screen items-center justify-center bg-base-200">
     <div class="w-full max-w-md">
         <x-card title="Login" shadow class="bg-base-100">
             @if (session('status'))
@@ -44,17 +44,13 @@
 
             <x-hr text="Ou continue com" class="my-6" />
 
-            <x-button
-                label="Entrar com Slack"
-                link="{{ route('auth.slack.redirect') }}"
-                icon="o-chat-bubble-left-right"
-                class="btn-outline w-full"
-                no-wire-navigate
+            <a
+                href="{{ route('auth.slack.redirect') }}"
+                class="btn btn-outline w-full flex items-center justify-center gap-2"
             >
-                <x-slot:prepend>
-                    <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-5 w-5">
-                </x-slot:prepend>
-            </x-button>
+                <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-5 w-5">
+                <span>Entrar com Slack</span>
+            </a>
 
             @if (session('error'))
                 <x-alert icon="o-exclamation-triangle" class="alert-error mt-4">
