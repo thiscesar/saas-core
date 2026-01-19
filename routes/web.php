@@ -31,3 +31,10 @@ Route::middleware('auth')->group(function () {
         return redirect('/login');
     })->name('logout');
 });
+
+// Admin routes
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::livewire('/users', 'pages::users.index')->name('users.index');
+    Route::livewire('/users/create', 'pages::users.create')->name('users.create');
+    Route::livewire('/users/{user}/edit', 'pages::users.edit')->name('users.edit');
+});
