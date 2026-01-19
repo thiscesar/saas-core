@@ -28,7 +28,7 @@
         {{-- Main Container --}}
         <x-main>
             {{-- Sidebar --}}
-            <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="Recolher">
+            <x-slot:sidebar drawer="main-drawer" collapsible collapse-text="Recolher" class="bg-base-200 lg:bg-transparent">
                 <div class="flex h-full flex-col">
                     {{-- Brand --}}
                     <div class="mary-hideable mb-5 ml-5 pt-5">
