@@ -48,7 +48,7 @@ class User extends Authenticatable implements Auditable
      */
     public function getAvatarUrl(): ?string
     {
-        return $this->attributes['avatar_url'] ?? null;
+        return $this->getAttributeValue('avatar_url');
     }
 
     /**
