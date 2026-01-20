@@ -24,7 +24,7 @@ it('can be created with factory', function (): void {
 });
 
 it('has correct fillable attributes', function (): void {
-    $fillable = ['name', 'email', 'password', 'slack_id', 'slack_access_token', 'slack_refresh_token', 'avatar_url'];
+    $fillable = ['name', 'email', 'password', 'slack_id', 'slack_access_token', 'slack_refresh_token', 'avatar_url', 'status', 'invitation_id'];
 
     expect((new User())->getFillable())->toBe($fillable);
 });

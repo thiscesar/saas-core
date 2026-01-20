@@ -62,22 +62,25 @@ it('denies access to create user page for non-admin', function () {
         ->assertForbidden();
 });
 
-it('allows admin to create a new user', function () {
+it('allows admin to invite a new user', function () {
     $admin = User::factory()->create(['is_admin' => true]);
 
     actingAs($admin);
 
+    Illuminate\Support\Facades\Notification::fake();
+
     Livewire::test('pages::users.create')
         ->set('name', 'New User')
-        ->set('email', 'newuser@example.com')
-        ->set('password', 'password123')
-        ->set('password_confirmation', 'password123')
+        ->set('email', 'newuser@boomsistemas.com.br')
         ->set('is_admin', false)
         ->call('save')
         ->assertHasNoErrors()
         ->assertRedirect(route('users.index'));
 
-    expect(User::where('email', 'newuser@example.com')->exists())->toBeTrue();
+    $user = User::where('email', 'newuser@boomsistemas.com.br')->first();
+    expect($user)->not->toBeNull();
+    expect($user->status)->toBe('pending');
+    expect($user->invitation_id)->not->toBeNull();
 });
 
 it('shows edit user page to admin', function () {
