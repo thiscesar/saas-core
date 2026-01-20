@@ -5,6 +5,8 @@ declare(strict_types = 1);
 namespace App\Providers;
 
 use App\Enums\Can;
+use App\Models\User;
+use App\Observers\UserObserver;
 use Carbon\CarbonImmutable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Date;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     {
         $this->setupLogViewer();
         $this->configModels();
+        $this->configObservers();
         $this->configCommands();
         $this->configUrls();
         $this->configDates();
@@ -55,6 +58,11 @@ class AppServiceProvider extends ServiceProvider
         Model::automaticallyEagerLoadRelationships();
     }
 
+    private function configObservers(): void
+    {
+        User::observe(UserObserver::class);
+    }
+
     private function configCommands(): void
     {
         DB::prohibitDestructiveCommands(
@@ -64,9 +72,10 @@ class AppServiceProvider extends ServiceProvider
 
     private function configUrls(): void
     {
-        URL::forceHttps(
-            app()->isProduction()
-        );
+        // Force HTTPS in production OR when APP_URL uses HTTPS (ngrok)
+        $shouldForceHttps = app()->isProduction() || str_starts_with(config('app.url'), 'https://');
+
+        URL::forceHttps($shouldForceHttps);
     }
 
     private function configDates(): void

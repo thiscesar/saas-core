@@ -40,10 +40,15 @@
                     <div class="flex items-center gap-3">
                         <x-user-avatar :user="$user" class="!w-10" />
                         <div>
-                            <div class="font-semibold">{{ $user->name }}</div>
-                            @if($user->is_admin)
-                                <x-badge value="Admin" class="badge-sm badge-accent" />
-                            @endif
+                            <div class="flex items-center gap-2">
+                                <span class="font-semibold">{{ $user->name }}</span>
+                                @if($user->is_admin)
+                                    <x-badge value="Admin" class="badge-sm badge-accent" />
+                                @endif
+                                @if($user->status === 'pending')
+                                    <x-badge value="Pendente" class="badge-sm badge-warning" />
+                                @endif
+                            </div>
                         </div>
                     </div>
                 @endscope

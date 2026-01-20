@@ -1,5 +1,6 @@
 <?php
 
+use App\Brain\User\Processes\ResendInvitationProcess;
 use App\Brain\User\Processes\UpdateUserProcess;
 use App\Models\User;
 use Livewire\Attributes\Layout;
@@ -50,5 +51,18 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
         ]);
 
         $this->success('Usuário atualizado com sucesso!', redirectTo: route('users.index'));
+    }
+
+    public function resendInvitation(): void
+    {
+        if ($this->user->status !== 'pending') {
+            $this->error('Este usuário já ativou sua conta.');
+
+            return;
+        }
+
+        ResendInvitationProcess::dispatchSync(['userId' => $this->user->id]);
+
+        $this->success('Convite reenviado com sucesso!');
     }
 };

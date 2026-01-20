@@ -58,4 +58,15 @@ class UserFactory extends Factory
             'password'            => null,
         ]);
     }
+
+    /**
+     * Indicate that the user has pending status.
+     */
+    public function pending(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'status'   => 'pending',
+            'password' => null,
+        ]);
+    }
 }

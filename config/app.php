@@ -19,6 +19,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | User Email Domain
+    |--------------------------------------------------------------------------
+    |
+    | This value determines the allowed email domain for user invitations.
+    | If set, only emails from this domain will be accepted when creating
+    | new user invitations. Leave empty to allow any domain.
+    |
+    */
+
+    'user_email_domain' => env('USER_EMAIL_DOMAIN'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Environment
     |--------------------------------------------------------------------------
     |

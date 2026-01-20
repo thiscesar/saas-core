@@ -10,6 +10,7 @@ Route::get('/', fn () => auth()->check() ? redirect('/dashboard') : redirect('/l
 // Guest routes (redirect to dashboard if authenticated)
 Route::middleware('guest')->group(function () {
     Route::livewire('/login', 'pages::auth.login')->name('login');
+    Route::livewire('/invitation/activate/{token}', 'pages::invitation-activate')->name('invitation.activate');
 
     Route::get('/auth/slack/redirect', [SlackAuthController::class, 'redirect'])
         ->name('auth.slack.redirect');

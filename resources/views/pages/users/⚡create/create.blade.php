@@ -23,23 +23,7 @@
                         type="email"
                         icon="o-envelope"
                         placeholder="usuario@exemplo.com"
-                    />
-
-                    <x-input
-                        label="Senha"
-                        wire:model="password"
-                        type="password"
-                        icon="o-lock-closed"
-                        placeholder="Mínimo de 8 caracteres"
-                        hint="Use uma senha forte"
-                    />
-
-                    <x-input
-                        label="Confirmar senha"
-                        wire:model="password_confirmation"
-                        type="password"
-                        icon="o-lock-closed"
-                        placeholder="Digite a senha novamente"
+                        hint="Um convite será enviado para este e-mail"
                     />
 
                     <x-checkbox
@@ -51,7 +35,7 @@
 
                 <x-slot:actions>
                     <x-button label="Cancelar" link="{{ route('users.index') }}" />
-                    <x-button label="Salvar" type="submit" class="btn-primary" spinner="save" />
+                    <x-button label="Enviar Convite" type="submit" class="btn-primary" spinner="save" icon="o-envelope" />
                 </x-slot:actions>
             </x-form>
         </x-card>

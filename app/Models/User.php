@@ -35,6 +35,11 @@ class User extends Authenticatable implements Auditable
         return $this->hasMany(Login::class);
     }
 
+    public function invitation(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Invitation::class);
+    }
+
     /**
      * Get user initials for avatar placeholder.
      */
@@ -64,6 +69,8 @@ class User extends Authenticatable implements Auditable
         'slack_access_token',
         'slack_refresh_token',
         'avatar_url',
+        'status',
+        'invitation_id',
     ];
 
     /**

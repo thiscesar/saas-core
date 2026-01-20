@@ -7,6 +7,25 @@
     {{-- Main Content --}}
     <div class="px-5 lg:px-6">
         <div class="mx-auto max-w-2xl">
+            @if($user->status === 'pending')
+                <x-alert icon="o-clock" class="alert-warning mb-4">
+                    <div class="flex items-center justify-between gap-1">
+                        <div>
+                            <strong>Convite pendente</strong>
+                            <p class="text-sm">Este usuário ainda não ativou sua conta. O convite expira em 24 horas.</p>
+                        </div>
+                        <x-button
+                            label="Reenviar Convite"
+                            icon="o-paper-airplane"
+                            wire:click="resendInvitation"
+                            wire:confirm="Tem certeza? Isso invalidará o convite anterior e enviará um novo email."
+                            class="btn-sm btn-warning"
+                            spinner="resendInvitation"
+                        />
+                    </div>
+                </x-alert>
+            @endif
+
             <x-card class="bg-base-100 shadow-sm">
             <x-form wire:submit="save">
                 <div class="space-y-4">

@@ -1,6 +1,8 @@
 <?php
 
-use App\Brain\User\Processes\CreateUserProcess;
+use App\Brain\User\Processes\InviteUserProcess;
+use App\Rules\EmailDomain;
+use App\Rules\UniqueInvitation;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Attributes\Validate;
@@ -14,13 +16,8 @@ new #[Layout('layouts::app'), Title('Novo Usuário')] class extends Component
     #[Validate('required|string|max:255')]
     public string $name = '';
 
-    #[Validate('required|email|unique:users,email')]
+    #[Validate(['required', 'email', 'unique:users,email', new EmailDomain(), new UniqueInvitation()])]
     public string $email = '';
-
-    #[Validate('required|string|min:8|confirmed')]
-    public string $password = '';
-
-    public string $password_confirmation = '';
 
     #[Validate('boolean')]
     public bool $is_admin = false;
@@ -29,13 +26,12 @@ new #[Layout('layouts::app'), Title('Novo Usuário')] class extends Component
     {
         $this->validate();
 
-        CreateUserProcess::dispatchSync([
+        InviteUserProcess::dispatchSync([
             'name'     => $this->name,
             'email'    => $this->email,
-            'password' => $this->password,
             'is_admin' => $this->is_admin,
         ]);
 
-        $this->success('Usuário criado com sucesso!', redirectTo: route('users.index'));
+        $this->success('Convite enviado com sucesso!', redirectTo: route('users.index'));
     }
 };
