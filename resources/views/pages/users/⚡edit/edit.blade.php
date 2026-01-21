@@ -7,6 +7,29 @@
     {{-- Main Content --}}
     <div class="px-5 lg:px-6">
         <div class="mx-auto max-w-2xl">
+            {{-- User Profile Header --}}
+            <x-card class="mb-6 bg-base-100 shadow-sm">
+                <div class="flex flex-col items-center gap-4 py-4 text-center">
+                    <x-user-avatar :user="$user" class="w-20! h-20!" />
+
+                    <div>
+                        <div class="flex flex-wrap items-center justify-center gap-2">
+                            <h2 class="text-xl font-bold">{{ $user->name }}</h2>
+                            @if($user->is_admin)
+                                <x-badge value="Admin" class="badge-accent" />
+                            @endif
+                            @if($user->status === 'pending')
+                                <x-badge value="Pendente" class="badge-warning" />
+                            @endif
+                            @if($user->trashed())
+                                <x-badge value="Removido" class="badge-error" />
+                            @endif
+                        </div>
+                        <p class="mt-1 text-sm text-base-content/70">{{ $user->email }}</p>
+                    </div>
+                </div>
+            </x-card>
+
             @if($user->status === 'pending')
                 <x-alert icon="o-clock" class="alert-warning mb-4">
                     <div class="flex items-center justify-between gap-1">
