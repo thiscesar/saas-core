@@ -43,6 +43,46 @@ class User extends Authenticatable implements Auditable
     }
 
     /**
+     * Check if user has a specific role.
+     */
+    public function hasRole(string $roleName): bool
+    {
+        return $this->roles()->where('name', $roleName)->exists();
+    }
+
+    /**
+     * Check if user has a specific permission (directly or through roles).
+     */
+    public function hasPermission(string $permissionName): bool
+    {
+        // Check direct permissions
+        if ($this->permissions()->where('name', $permissionName)->exists()) {
+            return true;
+        }
+
+        // Check permissions through roles
+        return $this->roles()
+            ->whereHas('permissions', fn ($query) => $query->where('name', $permissionName))
+            ->exists();
+    }
+
+    /**
+     * Sync user roles (replaces all existing roles).
+     */
+    public function syncRoles(array $roleIds): void
+    {
+        $this->roles()->sync($roleIds);
+    }
+
+    /**
+     * Check if user is a super admin (bypasses all permission checks).
+     */
+    public function isSuperAdmin(): bool
+    {
+        return $this->is_admin === true;
+    }
+
+    /**
      * Get user initials for avatar placeholder.
      */
     public function getInitials(): string

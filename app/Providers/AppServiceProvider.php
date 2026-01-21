@@ -43,7 +43,21 @@ class AppServiceProvider extends ServiceProvider
     private function setupLogViewer(): void
     {
         // Setup authentication in /logs route
-        LogViewer::auth(fn ($request): ?bool => $request->user()->is_admin);
+        LogViewer::auth(function ($request): ?bool {
+            $user = $request->user();
+
+            if (! $user) {
+                return false;
+            }
+
+            // Super admins always have access
+            if ($user->is_admin) {
+                return true;
+            }
+
+            // Check view-logs permission
+            return $user->hasPermission('view-logs');
+        });
     }
 
     private function configModels(): void
@@ -88,10 +102,25 @@ class AppServiceProvider extends ServiceProvider
         foreach (Can::cases() as $permission) {
             Gate::define(
                 $permission->value,
-                fn ($user): bool => $user
-                    ->permissions()
-                    ->whereName($permission->value)
-                    ->exists()
+                function ($user) use ($permission): bool {
+                    // Super admins bypass all checks
+                    if ($user->is_admin) {
+                        return true;
+                    }
+
+                    // Check direct permissions
+                    if ($user->permissions()->whereName($permission->value)->exists()) {
+                        return true;
+                    }
+
+                    // Check permissions through roles
+                    return $user->roles()
+                        ->whereHas(
+                            'permissions',
+                            fn ($query) => $query->whereName($permission->value)
+                        )
+                        ->exists();
+                }
             );
         }
     }
