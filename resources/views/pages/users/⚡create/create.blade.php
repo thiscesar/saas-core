@@ -26,10 +26,20 @@
                         hint="Um convite será enviado para este e-mail"
                     />
 
+                    <x-select
+                        label="Função"
+                        wire:model="role_id"
+                        :options="$this->roles"
+                        option-value="id"
+                        option-label="display_name"
+                        placeholder="Selecione uma função"
+                        hint="Define as permissões do usuário no sistema"
+                    />
+
                     <x-checkbox
-                        label="Administrador"
+                        label="Super Administrador"
                         wire:model="is_admin"
-                        hint="Usuários administradores têm acesso total ao sistema"
+                        hint="Acesso total ao sistema, ignorando permissões (use com cautela)"
                     />
                 </div>
 

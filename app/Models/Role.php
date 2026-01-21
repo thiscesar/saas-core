@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
@@ -19,5 +20,15 @@ class Role extends BaseModel
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
+    }
+
+    /**
+     * Get the formatted display name.
+     */
+    protected function displayName(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => ucfirst($this->name)
+        );
     }
 }

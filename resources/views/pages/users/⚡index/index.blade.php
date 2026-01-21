@@ -52,6 +52,9 @@
                                 @if($user->is_admin)
                                     <x-badge value="Admin" class="badge-sm badge-accent" />
                                 @endif
+                                @foreach($user->roles as $role)
+                                    <x-badge value="{{ $role->display_name }}" class="badge-sm badge-info" />
+                                @endforeach
                                 @if($user->status === 'pending')
                                     <x-badge value="Pendente" class="badge-sm badge-warning" />
                                 @endif
