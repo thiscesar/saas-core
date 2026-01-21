@@ -62,3 +62,47 @@ it('does not update password when null', function () {
 
     expect($user->password)->toBe($oldPassword);
 });
+
+it('syncs user role when role_id is provided', function () {
+    $role1 = App\Models\Role::create(['name' => 'role-1']);
+    $role2 = App\Models\Role::create(['name' => 'role-2']);
+
+    $user = User::factory()->create();
+    $user->roles()->attach($role1);
+
+    expect($user->hasRole('role-1'))->toBeTrue();
+
+    UpdateUserProcess::dispatchSync([
+        'userId'   => $user->id,
+        'name'     => $user->name,
+        'password' => null,
+        'role_id'  => $role2->id,
+        'is_admin' => false,
+    ]);
+
+    $user->refresh();
+
+    expect($user->hasRole('role-2'))->toBeTrue();
+    expect($user->hasRole('role-1'))->toBeFalse();
+});
+
+it('removes all roles when role_id is null', function () {
+    $role = App\Models\Role::create(['name' => 'test-role']);
+
+    $user = User::factory()->create();
+    $user->roles()->attach($role);
+
+    expect($user->roles)->toHaveCount(1);
+
+    UpdateUserProcess::dispatchSync([
+        'userId'   => $user->id,
+        'name'     => $user->name,
+        'password' => null,
+        'role_id'  => null,
+        'is_admin' => false,
+    ]);
+
+    $user->refresh();
+
+    expect($user->roles)->toHaveCount(0);
+});

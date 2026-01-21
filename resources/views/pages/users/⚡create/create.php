@@ -1,6 +1,7 @@
 <?php
 
 use App\Brain\User\Processes\InviteUserProcess;
+use App\Models\Role;
 use App\Rules\EmailDomain;
 use App\Rules\UniqueInvitation;
 use Livewire\Attributes\Layout;
@@ -19,8 +20,16 @@ new #[Layout('layouts::app'), Title('Novo Usuário')] class extends Component
     #[Validate(['required', 'email', 'unique:users,email', new EmailDomain(), new UniqueInvitation()])]
     public string $email = '';
 
+    #[Validate('nullable|exists:roles,id')]
+    public ?int $role_id = null;
+
     #[Validate('boolean')]
     public bool $is_admin = false;
+
+    public function getRolesProperty()
+    {
+        return Role::all();
+    }
 
     public function save(): void
     {
@@ -29,6 +38,7 @@ new #[Layout('layouts::app'), Title('Novo Usuário')] class extends Component
         InviteUserProcess::dispatchSync([
             'name'     => $this->name,
             'email'    => $this->email,
+            'role_id'  => $this->role_id,
             'is_admin' => $this->is_admin,
         ]);
 

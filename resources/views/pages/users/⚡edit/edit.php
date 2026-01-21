@@ -4,6 +4,7 @@ declare(strict_types = 1);
 
 use App\Brain\User\Processes\ResendInvitationProcess;
 use App\Brain\User\Processes\UpdateUserProcess;
+use App\Models\Role;
 use App\Models\User;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
@@ -25,21 +26,30 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
 
     public ?string $password_confirmation = null;
 
+    public ?int $role_id = null;
+
     public bool $is_admin = false;
 
     public function mount(User $user): void
     {
         // Reload user with trashed to ensure deleted_at is loaded
-        $this->user = User::withTrashed()->findOrFail($user->id);
+        $this->user = User::withTrashed()->with('roles')->findOrFail($user->id);
         $this->name = $this->user->name;
         $this->email = $this->user->email;
         $this->is_admin = $this->user->is_admin ?? false;
+        $this->role_id = $this->user->roles->first()?->id;
+    }
+
+    public function getRolesProperty()
+    {
+        return Role::all();
     }
 
     public function save(): void
     {
         $rules = [
             'name'     => 'required|string|max:255',
+            'role_id'  => 'nullable|exists:roles,id',
             'is_admin' => 'boolean',
         ];
 
@@ -55,6 +65,7 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
             'userId'   => $this->user->id,
             'name'     => $this->name,
             'password' => $this->password,
+            'role_id'  => $this->role_id,
             'is_admin' => $this->is_admin,
         ]);
 

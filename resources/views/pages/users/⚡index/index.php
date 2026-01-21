@@ -25,6 +25,7 @@ new #[Layout('layouts::app'), Title('Usuários')] class extends Component
     {
         return [
             'users' => User::query()
+                ->with('roles')
                 ->when($this->search, fn ($query) => $query->where('name', 'like', "%{$this->search}%")
                     ->orWhere('email', 'like', "%{$this->search}%"))
                 ->when($this->showDeleted, fn ($query) => $query->withTrashed())

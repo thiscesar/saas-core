@@ -14,6 +14,7 @@ use Brain\Task;
  * @property-read string $name
  * @property-read Invitation $invitation
  * @property-read bool|null $is_admin
+ * @property-read int|null $role_id
  *
  * @property User $user
  */
@@ -28,6 +29,11 @@ class CreatePendingUserTask extends Task
             'status'        => 'pending',
             'invitation_id' => $this->invitation->id,
         ]);
+
+        // Attach role if provided
+        if ($this->role_id) {
+            $this->user->roles()->attach($this->role_id);
+        }
 
         return $this;
     }

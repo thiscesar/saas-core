@@ -14,6 +14,7 @@ use Brain\Task;
  * @property-read string $name
  * @property-read string|null $password
  * @property-read bool $is_admin
+ * @property-read int|null $role_id
  *
  * @property User $user
  */
@@ -38,6 +39,9 @@ class UpdateUserTask extends Task
         // Remove email from update data
 
         $this->user->update($data);
+
+        // Sync role (one role per user)
+        $this->user->roles()->sync($this->role_id ? [$this->role_id] : []);
 
         return $this;
     }
