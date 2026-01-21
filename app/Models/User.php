@@ -8,6 +8,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use OwenIt\Auditing\Auditable as AuditingAuditable;
@@ -19,6 +20,7 @@ class User extends Authenticatable implements Auditable
     use HasFactory;
     use Notifiable;
     use AuditingAuditable;
+    use SoftDeletes;
 
     public function permissions(): BelongsToMany
     {
@@ -95,6 +97,7 @@ class User extends Authenticatable implements Auditable
         return [
             'email_verified_at'   => 'datetime',
             'password'            => 'hashed',
+            'password_set_at'     => 'datetime',
             'is_admin'            => 'boolean',
             'slack_access_token'  => 'encrypted',
             'slack_refresh_token' => 'encrypted',

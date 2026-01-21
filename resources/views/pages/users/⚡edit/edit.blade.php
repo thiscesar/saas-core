@@ -42,24 +42,29 @@
                         type="email"
                         icon="o-envelope"
                         placeholder="usuario@exemplo.com"
+                        readonly
+                        disabled
+                        hint="Email não pode ser alterado (vem do Slack)"
                     />
 
-                    <x-input
-                        label="Nova senha (deixe em branco para manter a atual)"
-                        wire:model="password"
-                        type="password"
-                        icon="o-lock-closed"
-                        placeholder="Mínimo de 8 caracteres"
-                        hint="Preencha apenas se deseja alterar a senha"
-                    />
+                    @if($this->isEditingOwnAccount())
+                        <x-input
+                            label="Nova senha (deixe em branco para manter a atual)"
+                            wire:model="password"
+                            type="password"
+                            icon="o-lock-closed"
+                            placeholder="Mínimo de 8 caracteres"
+                            hint="Preencha apenas se deseja alterar a senha"
+                        />
 
-                    <x-input
-                        label="Confirmar nova senha"
-                        wire:model="password_confirmation"
-                        type="password"
-                        icon="o-lock-closed"
-                        placeholder="Digite a senha novamente"
-                    />
+                        <x-input
+                            label="Confirmar nova senha"
+                            wire:model="password_confirmation"
+                            type="password"
+                            icon="o-lock-closed"
+                            placeholder="Digite a senha novamente"
+                        />
+                    @endif
 
                     <x-checkbox
                         label="Administrador"
@@ -71,6 +76,26 @@
                 <x-slot:actions>
                     <x-button label="Cancelar" link="{{ route('users.index') }}" />
                     <x-button label="Salvar" type="submit" class="btn-primary" spinner="save" />
+
+                    @if(!$this->isEditingOwnAccount() && !$this->user->trashed())
+                        <x-button
+                            label="Remover"
+                            wire:click="delete"
+                            wire:confirm="Tem certeza que deseja remover este usuário?"
+                            class="btn-warning"
+                            spinner="delete"
+                        />
+                    @endif
+
+                    @if($this->user->trashed())
+                        <x-button
+                            label="Restaurar"
+                            wire:click="restore"
+                            wire:confirm="Tem certeza que deseja restaurar este usuário?"
+                            class="btn-success"
+                            spinner="restore"
+                        />
+                    @endif
                 </x-slot:actions>
             </x-form>
         </x-card>

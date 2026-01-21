@@ -11,8 +11,9 @@ use Brain\Task;
 /**
  * Task FindOrCreateUserFromSlackTask
  *
- * Finds an existing user by Slack ID or email, or creates a new user from Slack OAuth data.
- * Handles account linking when a user logs in via Slack with an email that already exists.
+ * Finds an existing user with a pending invitation or by Slack ID.
+ * Only users with valid invitations or existing Slack accounts can authenticate.
+ * Throws exception if no valid user is found.
  *
  * @property-read string $slackId
  * @property-read string $email
@@ -74,22 +75,6 @@ class FindOrCreateUserFromSlackTask extends Task
             $user->update([
                 'slack_access_token'  => $this->accessToken,
                 'slack_refresh_token' => $this->refreshToken,
-            ]);
-
-            $this->user = $user;
-
-            return $this;
-        }
-
-        // Priority 2: Find user by email (account linking scenario)
-        $user = User::where('email', $this->email)->first();
-
-        if ($user) {
-            // Link Slack to existing account
-            $user->update([
-                'slack_id'            => $this->slackId,
-                'slack_access_token'  => $this->accessToken,
-                'slack_refresh_token' => $this->refreshToken,
                 'avatar_url'          => $this->avatar,
             ]);
 
@@ -98,18 +83,7 @@ class FindOrCreateUserFromSlackTask extends Task
             return $this;
         }
 
-        // Priority 3: Create new user from Slack data
-        $this->user = User::create([
-            'name'                => $this->name,
-            'email'               => $this->email,
-            'slack_id'            => $this->slackId,
-            'slack_access_token'  => $this->accessToken,
-            'slack_refresh_token' => $this->refreshToken,
-            'avatar_url'          => $this->avatar,
-            'email_verified_at'   => now(), // OAuth emails are verified by provider
-            'status'              => 'active',
-        ]);
-
-        return $this;
+        // No valid user found - require invitation
+        throw new \Exception('Você precisa de um convite para acessar o sistema. Contate o administrador.');
     }
 }

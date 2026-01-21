@@ -41,13 +41,20 @@ class SlackAuthController extends Controller
                 'refreshToken' => $slackUser->refreshToken,
             ]);
 
+            // Check if user needs to set password
+            $user = auth()->user();
+
+            if ($user && ! $user->password_set_at) {
+                return redirect('/auth/set-password');
+            }
+
             return redirect()->intended('/dashboard');
         } catch (InvalidStateException) {
             return redirect('/login')->with('error', 'Autenticação inválida. Por favor, tente novamente.');
         } catch (Exception $e) {
             Log::error('Slack OAuth error', ['exception' => $e]);
 
-            return redirect('/login')->with('error', 'Erro ao autenticar com Slack.');
+            return redirect('/login')->with('error', $e->getMessage() ?: 'Erro ao autenticar com Slack.');
         }
     }
 }

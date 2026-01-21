@@ -1,6 +1,6 @@
 <div>
     {{-- Page Header --}}
-    <div class="mb-5 px-5">
+    <div class="mb-5 pt-5">
         <div class="flex items-center justify-between">
             <h1 class="text-2xl font-bold lg:text-3xl">Dashboard</h1>
             {{-- Espaço para ações futuras (filtros, botões, etc) --}}

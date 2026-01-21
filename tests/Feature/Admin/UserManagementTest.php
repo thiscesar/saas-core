@@ -110,17 +110,17 @@ it('allows admin to edit a user', function () {
     expect($user->fresh()->name)->toBe('Updated Name');
 });
 
-it('allows admin to delete a user', function () {
+it('allows admin to soft delete a user', function () {
     $admin = User::factory()->create(['is_admin' => true]);
-    $user  = User::factory()->create();
+    $user  = User::factory()->create(['status' => 'active']);
 
     actingAs($admin);
 
     Livewire::test('pages::users.index')
-        ->call('deleteUser', $user->id)
+        ->call('delete', $user->id)
         ->assertHasNoErrors();
 
-    expect(User::find($user->id))->toBeNull();
+    expect($user->fresh()->trashed())->toBeTrue();
 });
 
 it('prevents admin from deleting themselves', function () {
@@ -129,8 +129,7 @@ it('prevents admin from deleting themselves', function () {
     actingAs($admin);
 
     Livewire::test('pages::users.index')
-        ->call('deleteUser', $admin->id)
-        ->assertHasNoErrors();
+        ->call('delete', $admin->id);
 
-    expect(User::find($admin->id))->not->toBeNull();
+    expect($admin->fresh()->trashed())->toBeFalse();
 });

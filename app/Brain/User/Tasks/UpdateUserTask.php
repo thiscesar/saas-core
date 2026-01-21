@@ -12,7 +12,6 @@ use Brain\Task;
  *
  * @property-read int $userId
  * @property-read string $name
- * @property-read string $email
  * @property-read string|null $password
  * @property-read bool $is_admin
  *
@@ -26,13 +25,17 @@ class UpdateUserTask extends Task
 
         $data = [
             'name'     => $this->name,
-            'email'    => $this->email,
             'is_admin' => $this->is_admin ?? false,
         ];
 
-        if ($this->password) {
-            $data['password'] = bcrypt($this->password);
+        // Only allow password updates if editing own account
+        if ($this->password && $this->userId === auth()->id()) {
+            $data['password']        = bcrypt($this->password);
+            $data['password_set_at'] = now();
         }
+
+        // Email is immutable (comes from Slack, cannot be changed)
+        // Remove email from update data
 
         $this->user->update($data);
 

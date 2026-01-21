@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Brain\Auth\Tasks\FindOrCreateUserFromSlackTask;
 use App\Models\User;
 
-it('creates new user from slack data', function (): void {
+it('throws exception when creating user without invitation', function (): void {
     $task = new FindOrCreateUserFromSlackTask([
         'slackId'      => 'U12345678',
         'email'        => 'test@example.com',
@@ -15,20 +15,7 @@ it('creates new user from slack data', function (): void {
         'refreshToken' => 'xoxr-refresh',
     ]);
 
-    $task->handle();
-
-    expect($task->user)->toBeInstanceOf(User::class);
-    expect($task->user->slack_id)->toBe('U12345678');
-    expect($task->user->email)->toBe('test@example.com');
-    expect($task->user->name)->toBe('Test User');
-    expect($task->user->avatar_url)->toBe('https://example.com/avatar.jpg');
-    expect($task->user->email_verified_at)->not->toBeNull();
-
-    $this->assertDatabaseHas('users', [
-        'slack_id' => 'U12345678',
-        'email'    => 'test@example.com',
-        'name'     => 'Test User',
-    ]);
+    expect(fn () => $task->handle())->toThrow(Exception::class, 'Você precisa de um convite para acessar o sistema. Contate o administrador.');
 });
 
 it('finds existing user by slack_id and updates tokens', function (): void {
@@ -56,7 +43,7 @@ it('finds existing user by slack_id and updates tokens', function (): void {
     expect($task->user->name)->toBe($user->name);   // Name should not change
 });
 
-it('links slack to existing user by email', function (): void {
+it('throws exception when trying to link slack without invitation', function (): void {
     $user = User::factory()->create([
         'email'    => 'test@example.com',
         'slack_id' => null, // No Slack linkage yet
@@ -71,13 +58,7 @@ it('links slack to existing user by email', function (): void {
         'refreshToken' => 'xoxr-refresh',
     ]);
 
-    $task->handle();
-
-    expect($task->user->id)->toBe($user->id);
-    expect($task->user->slack_id)->toBe('U12345678');
-    expect($task->user->slack_access_token)->toBe('xoxp-token');
-    expect($task->user->slack_refresh_token)->toBe('xoxr-refresh');
-    expect($task->user->avatar_url)->toBe('https://example.com/avatar.jpg');
+    expect(fn () => $task->handle())->toThrow(Exception::class, 'Você precisa de um convite para acessar o sistema. Contate o administrador.');
 });
 
 it('updates tokens on subsequent logins', function (): void {
@@ -103,7 +84,7 @@ it('updates tokens on subsequent logins', function (): void {
     expect($user->slack_refresh_token)->toBe('brand-new-refresh');
 });
 
-it('sets email_verified_at for new oauth users', function (): void {
+it('requires invitation for new oauth users', function (): void {
     $task = new FindOrCreateUserFromSlackTask([
         'slackId'      => 'U12345678',
         'email'        => 'test@example.com',
@@ -113,12 +94,10 @@ it('sets email_verified_at for new oauth users', function (): void {
         'refreshToken' => null,
     ]);
 
-    $task->handle();
-
-    expect($task->user->email_verified_at)->not->toBeNull();
+    expect(fn () => $task->handle())->toThrow(Exception::class, 'Você precisa de um convite para acessar o sistema. Contate o administrador.');
 });
 
-it('handles missing avatar gracefully', function (): void {
+it('requires invitation even with missing avatar', function (): void {
     $task = new FindOrCreateUserFromSlackTask([
         'slackId'      => 'U12345678',
         'email'        => 'test@example.com',
@@ -128,13 +107,10 @@ it('handles missing avatar gracefully', function (): void {
         'refreshToken' => 'xoxr-refresh',
     ]);
 
-    $task->handle();
-
-    expect($task->user)->toBeInstanceOf(User::class);
-    expect($task->user->avatar_url)->toBeNull();
+    expect(fn () => $task->handle())->toThrow(Exception::class, 'Você precisa de um convite para acessar o sistema. Contate o administrador.');
 });
 
-it('handles missing refresh token', function (): void {
+it('requires invitation even with missing refresh token', function (): void {
     $task = new FindOrCreateUserFromSlackTask([
         'slackId'      => 'U12345678',
         'email'        => 'test@example.com',
@@ -144,10 +120,7 @@ it('handles missing refresh token', function (): void {
         'refreshToken' => null,
     ]);
 
-    $task->handle();
-
-    expect($task->user)->toBeInstanceOf(User::class);
-    expect($task->user->slack_refresh_token)->toBeNull();
+    expect(fn () => $task->handle())->toThrow(Exception::class, 'Você precisa de um convite para acessar o sistema. Contate o administrador.');
 });
 
 it('does not update name when linking by slack_id', function (): void {

@@ -24,6 +24,16 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
     {
         $this->validate();
 
+        // Check if user exists and is eligible for login
+        // Soft deleted users are automatically excluded from queries
+        $user = \App\Models\User::where('email', $this->email)->first();
+
+        if ( ! $user || $user->status !== 'active' || ! $user->password_set_at) {
+            $this->addError('email', 'Usuário não encontrado ou inativo. Contate o administrador do sistema.');
+
+            return;
+        }
+
         try {
             AuthProcess::dispatchSync([
                 'email'    => $this->email,

@@ -21,6 +21,7 @@ Route::get('/auth/slack/callback', [SlackAuthController::class, 'callback'])
 
 // Authenticated routes
 Route::middleware('auth')->group(function () {
+    Route::livewire('/auth/set-password', 'pages::auth.set-password')->name('auth.set-password');
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
     Route::livewire('/settings', 'pages::profile')->name('settings');
 

@@ -30,8 +30,10 @@ class UserFactory extends Factory
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password'          => static::$password ??= Hash::make('password'),
+            'password_set_at'   => now(),
             'remember_token'    => Str::random(10),
             'is_admin'          => false,
+            'status'            => 'active',
         ];
     }
 
@@ -65,8 +67,20 @@ class UserFactory extends Factory
     public function pending(): static
     {
         return $this->state(fn (array $attributes): array => [
-            'status'   => 'pending',
-            'password' => null,
+            'status'          => 'pending',
+            'password'        => null,
+            'password_set_at' => null,
+        ]);
+    }
+
+    /**
+     * Indicate that the user has a password set.
+     */
+    public function withPassword(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'password'        => static::$password ??= Hash::make('password'),
+            'password_set_at' => now(),
         ]);
     }
 }

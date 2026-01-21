@@ -1,10 +1,14 @@
 <div>
     {{-- Page Header --}}
-    <div class="mb-6 px-5 lg:px-6">
+    <div class="mb-5 px-5 lg:px-6">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h1 class="text-2xl font-bold lg:text-3xl">Usuários</h1>
 
             <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <x-checkbox
+                    label="Mostrar removidos"
+                    wire:model.live="showDeleted"
+                />
                 <x-input
                     wire:model.live.debounce.300ms="search"
                     placeholder="Buscar..."
@@ -22,6 +26,9 @@
             </div>
         </div>
     </div>
+
+    {{-- Header Divider --}}
+    <div class="mb-6 border-t border-base-300"></div>
 
     {{-- Main Content --}}
     <div class="px-5 lg:px-6">
@@ -48,6 +55,9 @@
                                 @if($user->status === 'pending')
                                     <x-badge value="Pendente" class="badge-sm badge-warning" />
                                 @endif
+                                @if($user->trashed())
+                                    <x-badge value="Removido" class="badge-sm badge-error" />
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -71,14 +81,24 @@
                             class="btn-ghost btn-sm"
                             tooltip="Editar"
                         />
-                        @if(auth()->id() !== $user->id)
+                        @if(auth()->id() !== $user->id && !$user->trashed())
                             <x-button
                                 icon="o-trash"
-                                wire:click="deleteUser({{ $user->id }})"
-                                wire:confirm="Tem certeza que deseja excluir este usuário?"
-                                class="btn-ghost btn-sm text-error"
-                                tooltip="Excluir"
-                                spinner
+                                wire:click="delete({{ $user->id }})"
+                                wire:confirm="Tem certeza que deseja remover este usuário?"
+                                class="btn-ghost btn-sm text-warning"
+                                tooltip="Remover"
+                                spinner="delete"
+                            />
+                        @endif
+                        @if($user->trashed())
+                            <x-button
+                                icon="o-arrow-path"
+                                wire:click="restore({{ $user->id }})"
+                                wire:confirm="Tem certeza que deseja restaurar este usuário?"
+                                class="btn-ghost btn-sm text-success"
+                                tooltip="Restaurar"
+                                spinner="restore"
                             />
                         @endif
                     </div>

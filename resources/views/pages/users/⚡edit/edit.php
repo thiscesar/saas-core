@@ -1,8 +1,11 @@
 <?php
 
+declare(strict_types = 1);
+
 use App\Brain\User\Processes\ResendInvitationProcess;
 use App\Brain\User\Processes\UpdateUserProcess;
 use App\Models\User;
+use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -26,31 +29,54 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
 
     public function mount(User $user): void
     {
-        $this->user = $user;
-        $this->name = $user->name;
-        $this->email = $user->email;
-        $this->is_admin = $user->is_admin ?? false;
+        // Reload user with trashed to ensure deleted_at is loaded
+        $this->user = User::withTrashed()->findOrFail($user->id);
+        $this->name = $this->user->name;
+        $this->email = $this->user->email;
+        $this->is_admin = $this->user->is_admin ?? false;
     }
 
     public function save(): void
     {
-        $this->validate([
-            'name'                  => 'required|string|max:255',
-            'email'                 => 'required|email|unique:users,email,' . $this->user->id,
-            'password'              => 'nullable|string|min:8|confirmed',
-            'password_confirmation' => 'nullable|string',
-            'is_admin'              => 'boolean',
-        ]);
+        $rules = [
+            'name'     => 'required|string|max:255',
+            'is_admin' => 'boolean',
+        ];
+
+        // Only allow password changes if editing own account
+        if ($this->isEditingOwnAccount()) {
+            $rules['password']              = ['nullable', 'confirmed', Password::defaults()];
+            $rules['password_confirmation'] = 'nullable|string';
+        }
+
+        $this->validate($rules);
 
         UpdateUserProcess::dispatchSync([
             'userId'   => $this->user->id,
             'name'     => $this->name,
-            'email'    => $this->email,
             'password' => $this->password,
             'is_admin' => $this->is_admin,
         ]);
 
         $this->success('Usuário atualizado com sucesso!', redirectTo: route('users.index'));
+    }
+
+    public function delete(): void
+    {
+        if ($this->user->id === auth()->id()) {
+            $this->error('Você não pode excluir a si mesmo.');
+
+            return;
+        }
+
+        $this->user->delete();
+        $this->success('Usuário removido com sucesso!', redirectTo: route('users.index'));
+    }
+
+    public function restore(): void
+    {
+        $this->user->restore();
+        $this->success('Usuário restaurado com sucesso!', redirectTo: route('users.index'));
     }
 
     public function resendInvitation(): void
@@ -64,5 +90,10 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
         ResendInvitationProcess::dispatchSync(['userId' => $this->user->id]);
 
         $this->success('Convite reenviado com sucesso!');
+    }
+
+    public function isEditingOwnAccount(): bool
+    {
+        return $this->user->id === auth()->id();
     }
 };
