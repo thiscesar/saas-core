@@ -19,8 +19,16 @@ return new class () extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
+            $table->string('password')->nullable();
+            $table->timestamp('password_set_at')->nullable();
             $table->rememberToken();
+            $table->string('slack_id')->nullable()->unique();
+            $table->text('slack_access_token')->nullable();
+            $table->text('slack_refresh_token')->nullable();
+            $table->string('avatar_url')->nullable();
+            $table->enum('status', ['pending', 'active'])->default('pending')->index();
+            $table->foreignId('invitation_id')->nullable()->constrained()->nullOnDelete();
+            $table->softDeletes();
             $table->timestamps();
         });
 
