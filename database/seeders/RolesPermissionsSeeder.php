@@ -16,28 +16,47 @@ class RolesPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $roles = [
-            'admin',
-            'user-admin',
-            'guest',
-        ];
-
-        foreach ($roles as $role) {
-            Role::create([
-                'name' => $role,
-            ]);
-        }
+        // Create all permissions from Can enum
+        $permissions = [];
 
         foreach (Can::cases() as $permission) {
-            Permission::create([
-                'name' => $permission,
+            $permissions[$permission->value] = Permission::create([
+                'name' => $permission->value,
             ]);
         }
 
-        $userAdmin = Role::query()->where('name', 'user-admin')->first();
-        $userAdmin->permissions()->attach(
-            Permission::query()
-                ->where('name', 'view-users')->get()
-        );
+        // Define roles with their permissions
+        $rolesConfig = [
+            'suporte' => [
+                'view-user',
+                'view-logs',
+            ],
+            'comercial' => [
+                'view-user',
+            ],
+            'desenvolvedor' => [
+                'view-user',
+                'create-user',
+                'update-user',
+                'view-logs',
+            ],
+            'diretor' => [
+                'view-user',
+                'create-user',
+                'update-user',
+                'delete-user',
+                'view-logs',
+            ],
+        ];
+
+        foreach ($rolesConfig as $roleName => $permissionNames) {
+            $role = Role::create(['name' => $roleName]);
+
+            $permissionIds = collect($permissionNames)
+                ->map(fn ($name) => $permissions[$name]->id)
+                ->toArray();
+
+            $role->permissions()->attach($permissionIds);
+        }
     }
 }
