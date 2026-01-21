@@ -9,7 +9,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-test('hasRole returns true when user has role', function () {
+test('hasRole returns true when user has role', function (): void {
     $role = Role::create(['name' => 'test-role']);
     $user = User::factory()->create();
     $user->roles()->attach($role);
@@ -18,7 +18,7 @@ test('hasRole returns true when user has role', function () {
     expect($user->hasRole('other-role'))->toBeFalse();
 });
 
-test('hasPermission checks direct and role permissions', function () {
+test('hasPermission checks direct and role permissions', function (): void {
     $permission = Permission::create(['name' => 'test-permission']);
     $role       = Role::create(['name' => 'test-role']);
     $role->permissions()->attach($permission);
@@ -29,7 +29,7 @@ test('hasPermission checks direct and role permissions', function () {
     expect($user->hasPermission('test-permission'))->toBeTrue();
 });
 
-test('isSuperAdmin returns true for admin users', function () {
+test('isSuperAdmin returns true for admin users', function (): void {
     $admin   = User::factory()->create(['is_admin' => true]);
     $regular = User::factory()->create(['is_admin' => false]);
 
@@ -37,7 +37,7 @@ test('isSuperAdmin returns true for admin users', function () {
     expect($regular->isSuperAdmin())->toBeFalse();
 });
 
-test('syncRoles replaces all existing roles', function () {
+test('syncRoles replaces all existing roles', function (): void {
     $role1 = Role::create(['name' => 'role-1']);
     $role2 = Role::create(['name' => 'role-2']);
     $role3 = Role::create(['name' => 'role-3']);

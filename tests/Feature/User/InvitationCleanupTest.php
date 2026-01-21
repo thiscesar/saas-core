@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Models\Invitation;
 use App\Models\User;
 
-it('deletes invitation when pending user is deleted', function () {
+it('deletes invitation when pending user is deleted', function (): void {
     // Create invitation and pending user
     $invitation = Invitation::factory()->create(['email' => 'test@example.com']);
     $user       = User::factory()->pending()->create([
@@ -24,7 +24,7 @@ it('deletes invitation when pending user is deleted', function () {
     expect(Invitation::find($invitation->id))->toBeNull();
 });
 
-it('does not delete invitation when active user is deleted', function () {
+it('does not delete invitation when active user is deleted', function (): void {
     // Create invitation and active user (invitation accepted)
     $invitation = Invitation::factory()->create([
         'email'       => 'active@example.com',
@@ -44,7 +44,7 @@ it('does not delete invitation when active user is deleted', function () {
     expect(Invitation::find($invitation->id))->not->toBeNull();
 });
 
-it('handles deletion of user without invitation', function () {
+it('handles deletion of user without invitation', function (): void {
     // Create user without invitation (e.g., created via Slack)
     $user = User::factory()->create([
         'email'         => 'slack-user@example.com',
@@ -59,7 +59,7 @@ it('handles deletion of user without invitation', function () {
     expect(User::find($user->id))->toBeNull();
 });
 
-it('allows new invitation after deleting pending user', function () {
+it('allows new invitation after deleting pending user', function (): void {
     // Create invitation and pending user
     $invitation = Invitation::factory()->create(['email' => 'reuse@example.com']);
     $user       = User::factory()->pending()->create([

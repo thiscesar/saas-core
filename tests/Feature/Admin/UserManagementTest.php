@@ -7,7 +7,7 @@ use Livewire\Livewire;
 
 use function Pest\Laravel\actingAs;
 
-it('shows users list to admin', function () {
+it('shows users list to admin', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     User::factory()->count(5)->create();
 
@@ -17,7 +17,7 @@ it('shows users list to admin', function () {
         ->assertSeeLivewire('pages::users.index');
 });
 
-it('denies access to non-admin users', function () {
+it('denies access to non-admin users', function (): void {
     $user = User::factory()->create(['is_admin' => false]);
 
     actingAs($user)
@@ -25,7 +25,7 @@ it('denies access to non-admin users', function () {
         ->assertForbidden();
 });
 
-it('allows searching users by name', function () {
+it('allows searching users by name', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['name' => 'John Doe']);
 
@@ -35,7 +35,7 @@ it('allows searching users by name', function () {
         ->assertSee('John Doe');
 });
 
-it('allows searching users by email', function () {
+it('allows searching users by email', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['email' => 'test@example.com']);
 
@@ -45,7 +45,7 @@ it('allows searching users by email', function () {
         ->assertSee('test@example.com');
 });
 
-it('shows create user page to admin', function () {
+it('shows create user page to admin', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
 
     actingAs($admin)
@@ -54,7 +54,7 @@ it('shows create user page to admin', function () {
         ->assertSeeLivewire('pages::users.create');
 });
 
-it('denies access to create user page for non-admin', function () {
+it('denies access to create user page for non-admin', function (): void {
     $user = User::factory()->create(['is_admin' => false]);
 
     actingAs($user)
@@ -62,7 +62,7 @@ it('denies access to create user page for non-admin', function () {
         ->assertForbidden();
 });
 
-it('allows admin to invite a new user', function () {
+it('allows admin to invite a new user', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
 
     actingAs($admin);
@@ -83,7 +83,7 @@ it('allows admin to invite a new user', function () {
     expect($user->invitation_id)->not->toBeNull();
 });
 
-it('shows edit user page to admin', function () {
+it('shows edit user page to admin', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create();
 
@@ -93,7 +93,7 @@ it('shows edit user page to admin', function () {
         ->assertSeeLivewire('pages::users.edit');
 });
 
-it('allows admin to edit a user', function () {
+it('allows admin to edit a user', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['name' => 'Old Name']);
 
@@ -110,7 +110,7 @@ it('allows admin to edit a user', function () {
     expect($user->fresh()->name)->toBe('Updated Name');
 });
 
-it('allows admin to soft delete a user', function () {
+it('allows admin to soft delete a user', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['status' => 'active']);
 
@@ -123,7 +123,7 @@ it('allows admin to soft delete a user', function () {
     expect($user->fresh()->trashed())->toBeTrue();
 });
 
-it('prevents admin from deleting themselves', function () {
+it('prevents admin from deleting themselves', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
 
     actingAs($admin);

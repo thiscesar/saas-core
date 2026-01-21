@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Brain\User\Processes\CreateUserProcess;
 use App\Models\User;
 
-it('creates a new user', function () {
+it('creates a new user', function (): void {
     CreateUserProcess::dispatchSync([
         'name'     => 'Test User',
         'email'    => 'test@example.com',
@@ -20,7 +20,7 @@ it('creates a new user', function () {
     expect($user->is_admin)->toBeFalse();
 });
 
-it('creates an admin user', function () {
+it('creates an admin user', function (): void {
     CreateUserProcess::dispatchSync([
         'name'     => 'Admin User',
         'email'    => 'admin@example.com',
@@ -32,7 +32,7 @@ it('creates an admin user', function () {
     expect($user->is_admin)->toBeTrue();
 });
 
-it('hashes the password when creating a user', function () {
+it('hashes the password when creating a user', function (): void {
     CreateUserProcess::dispatchSync([
         'name'     => 'Test User',
         'email'    => 'test@example.com',

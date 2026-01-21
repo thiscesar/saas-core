@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Notifications\UserInvitationNotification;
 use Illuminate\Support\Facades\Notification;
 
-it('deletes old invitation and creates new one', function () {
+it('deletes old invitation and creates new one', function (): void {
     Notification::fake();
 
     // Create pending user with invitation
@@ -32,7 +32,7 @@ it('deletes old invitation and creates new one', function () {
     expect($newInvitation->token)->not->toBe($oldToken);
 });
 
-it('updates user invitation_id with new invitation', function () {
+it('updates user invitation_id with new invitation', function (): void {
     Notification::fake();
 
     $oldInvitation = Invitation::factory()->create(['email' => 'test@example.com']);
@@ -54,7 +54,7 @@ it('updates user invitation_id with new invitation', function () {
     expect($user->invitation_id)->toBe($newInvitation->id);
 });
 
-it('sends new invitation notification', function () {
+it('sends new invitation notification', function (): void {
     Notification::fake();
 
     $oldInvitation = Invitation::factory()->create(['email' => 'test@example.com']);
@@ -67,12 +67,10 @@ it('sends new invitation notification', function () {
 
     $newInvitation = Invitation::where('email', 'test@example.com')->first();
 
-    Notification::assertSentOnDemand(UserInvitationNotification::class, function ($notification) use ($newInvitation) {
-        return $notification->invitation->id === $newInvitation->id;
-    });
+    Notification::assertSentOnDemand(UserInvitationNotification::class, fn ($notification): bool => $notification->invitation->id === $newInvitation->id);
 });
 
-it('generates different token for new invitation', function () {
+it('generates different token for new invitation', function (): void {
     Notification::fake();
 
     $oldInvitation = Invitation::factory()->create(['email' => 'test@example.com']);

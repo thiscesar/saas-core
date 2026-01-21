@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Models\User;
 use Illuminate\Support\Facades\Blade;
 
-it('renders user avatar with image', function () {
+it('renders user avatar with image', function (): void {
     $user = User::factory()->create([
         'name'       => 'John Doe',
         'avatar_url' => 'https://example.com/avatar.jpg',
@@ -21,7 +21,7 @@ it('renders user avatar with image', function () {
         ->toContain('!w-10');
 });
 
-it('renders user avatar with placeholder when no image', function () {
+it('renders user avatar with placeholder when no image', function (): void {
     $user = User::factory()->create([
         'name'       => 'Jane Smith',
         'avatar_url' => null,

@@ -34,7 +34,7 @@ new #[Layout('layouts.auth'), Title('Definir Senha')] class extends Component
 
         $user = auth()->user();
 
-        if ( ! $user) {
+        if (! $user) {
             $this->error('Usuário não autenticado.', redirectTo: '/auth/login');
 
             return;

@@ -24,7 +24,7 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
     public function login(): void
     {
         // Rate limiting: 5 attempts per IP
-        $key = 'login:'.request()->ip();
+        $key = 'login:' . request()->ip();
 
         if (RateLimiter::tooManyAttempts($key, 5)) {
             $seconds = RateLimiter::availableIn($key);
@@ -37,10 +37,10 @@ new #[Layout('layouts.auth'), Title('Login')] class extends Component
 
         // Check if user exists and is eligible for login
         // Soft deleted users are automatically excluded from queries
-        $user = \App\Models\User::where('email', $this->email)->first();
+        $user = App\Models\User::where('email', $this->email)->first();
 
         // Generic error message - does not reveal if user exists or not
-        if ( ! $user || $user->status !== 'active' || ! $user->password_set_at) {
+        if (! $user || $user->status !== 'active' || ! $user->password_set_at) {
             RateLimiter::hit($key, 900); // Block for 15 minutes
             $this->addError('email', 'Email ou senha incorretos.');
 

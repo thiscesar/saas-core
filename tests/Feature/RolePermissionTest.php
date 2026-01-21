@@ -8,7 +8,7 @@ use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Gate;
 
-test('user with role has permissions from that role', function () {
+test('user with role has permissions from that role', function (): void {
     $permission = Permission::create(['name' => 'view-user']);
     $role       = Role::create(['name' => 'suporte']);
     $role->permissions()->attach($permission);
@@ -20,7 +20,7 @@ test('user with role has permissions from that role', function () {
     expect($user->hasRole('suporte'))->toBeTrue();
 });
 
-test('super admin bypasses all permission checks', function () {
+test('super admin bypasses all permission checks', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
 
     expect(Gate::forUser($admin)->allows('view-user'))->toBeTrue();
@@ -28,13 +28,13 @@ test('super admin bypasses all permission checks', function () {
     expect(Gate::forUser($admin)->allows('view-logs'))->toBeTrue();
 });
 
-test('user without permission cannot access', function () {
+test('user without permission cannot access', function (): void {
     $user = User::factory()->create(['is_admin' => false]);
 
     expect(Gate::forUser($user)->allows('view-user'))->toBeFalse();
 });
 
-test('role assignment during user creation', function () {
+test('role assignment during user creation', function (): void {
     $role = Role::create(['name' => 'comercial']);
 
     InviteUserProcess::dispatchSync([

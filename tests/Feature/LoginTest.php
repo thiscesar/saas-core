@@ -5,12 +5,12 @@ declare(strict_types = 1);
 use App\Models\User;
 use Illuminate\Support\Facades\RateLimiter;
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Clear rate limiter before each test
     RateLimiter::clear('login:' . request()->ip());
 });
 
-test('active user with password can login successfully', function () {
+test('active user with password can login successfully', function (): void {
     $user = User::factory()->create([
         'email'           => 'user@example.com',
         'password'        => bcrypt('password'),
@@ -28,7 +28,7 @@ test('active user with password can login successfully', function () {
     $this->assertAuthenticatedAs($user);
 });
 
-test('pending user shows generic error', function () {
+test('pending user shows generic error', function (): void {
     User::factory()->create([
         'email'           => 'pending@example.com',
         'password'        => bcrypt('password'),
@@ -45,7 +45,7 @@ test('pending user shows generic error', function () {
     $this->assertGuest();
 });
 
-test('deleted user shows generic error', function () {
+test('deleted user shows generic error', function (): void {
     User::factory()->trashed()->create([
         'email'           => 'deleted@example.com',
         'password'        => bcrypt('password'),
@@ -62,7 +62,7 @@ test('deleted user shows generic error', function () {
     $this->assertGuest();
 });
 
-test('user without password_set_at shows generic error', function () {
+test('user without password_set_at shows generic error', function (): void {
     User::factory()->create([
         'email'           => 'nopassword@example.com',
         'password'        => bcrypt('password'),
@@ -79,7 +79,7 @@ test('user without password_set_at shows generic error', function () {
     $this->assertGuest();
 });
 
-test('non-existent user shows generic error', function () {
+test('non-existent user shows generic error', function (): void {
     Livewire::test('pages::auth.login')
         ->set('email', 'nonexistent@example.com')
         ->set('password', 'password')
@@ -89,7 +89,7 @@ test('non-existent user shows generic error', function () {
     $this->assertGuest();
 });
 
-test('wrong password shows generic error', function () {
+test('wrong password shows generic error', function (): void {
     User::factory()->create([
         'email'           => 'user@example.com',
         'password'        => bcrypt('correctpassword'),
@@ -106,7 +106,7 @@ test('wrong password shows generic error', function () {
     $this->assertGuest();
 });
 
-test('rate limiting blocks after 5 failed attempts', function () {
+test('rate limiting blocks after 5 failed attempts', function (): void {
     User::factory()->create([
         'email'           => 'user@example.com',
         'password'        => bcrypt('password'),
@@ -132,7 +132,7 @@ test('rate limiting blocks after 5 failed attempts', function () {
     $this->assertGuest();
 });
 
-test('rate limiting clears on successful login', function () {
+test('rate limiting clears on successful login', function (): void {
     $user = User::factory()->create([
         'email'           => 'user@example.com',
         'password'        => bcrypt('password'),

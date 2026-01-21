@@ -87,7 +87,7 @@ class AppServiceProvider extends ServiceProvider
     private function configUrls(): void
     {
         // Force HTTPS in production OR when APP_URL uses HTTPS (ngrok)
-        $shouldForceHttps = app()->isProduction() || str_starts_with(config('app.url'), 'https://');
+        $shouldForceHttps = app()->isProduction() || str_starts_with((string) config('app.url'), 'https://');
 
         URL::forceHttps($shouldForceHttps);
     }

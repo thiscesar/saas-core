@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use App\Brain\User\Processes\InviteUserProcess;
 use App\Models\Role;
 use App\Rules\EmailDomain;

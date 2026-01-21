@@ -8,7 +8,7 @@ use App\Models\User;
 use App\Notifications\UserInvitationNotification;
 use Illuminate\Support\Facades\Notification;
 
-it('creates invitation and sends notification', function () {
+it('creates invitation and sends notification', function (): void {
     Notification::fake();
 
     $result = InviteUserProcess::dispatchSync([
@@ -31,13 +31,11 @@ it('creates invitation and sends notification', function () {
     expect($user->password)->toBeNull();
 
     // Check notification was sent
-    Notification::assertSentOnDemand(UserInvitationNotification::class, function ($notification, $channels, $notifiable) use ($invitation) {
-        return $notifiable->routes['mail'] === 'john@example.com'
-            && $notification->invitation->id === $invitation->id;
-    });
+    Notification::assertSentOnDemand(UserInvitationNotification::class, fn ($notification, $channels, $notifiable): bool => $notifiable->routes['mail'] === 'john@example.com'
+        && $notification->invitation->id === $invitation->id);
 });
 
-it('creates admin user when is_admin is true', function () {
+it('creates admin user when is_admin is true', function (): void {
     Notification::fake();
 
     InviteUserProcess::dispatchSync([
@@ -50,7 +48,7 @@ it('creates admin user when is_admin is true', function () {
     expect($user->is_admin)->toBeTrue();
 });
 
-it('creates invitation with 24 hour expiration', function () {
+it('creates invitation with 24 hour expiration', function (): void {
     Notification::fake();
 
     InviteUserProcess::dispatchSync([
@@ -66,7 +64,7 @@ it('creates invitation with 24 hour expiration', function () {
     expect(now()->diffInHours($invitation->expires_at))->toBeLessThanOrEqual(24);
 });
 
-it('creates unique token for invitation', function () {
+it('creates unique token for invitation', function (): void {
     Notification::fake();
 
     InviteUserProcess::dispatchSync([

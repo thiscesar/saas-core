@@ -32,7 +32,7 @@ class InvitationFactory extends Factory
      */
     public function expired(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'expires_at' => now()->subHours(1),
         ]);
     }
@@ -42,7 +42,7 @@ class InvitationFactory extends Factory
      */
     public function accepted(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'accepted_at' => now(),
         ]);
     }

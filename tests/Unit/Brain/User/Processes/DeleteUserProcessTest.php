@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Brain\User\Processes\DeleteUserProcess;
 use App\Models\User;
 
-it('deletes a user', function () {
+it('deletes a user', function (): void {
     $user = User::factory()->create();
 
     DeleteUserProcess::dispatchSync([
@@ -15,7 +15,7 @@ it('deletes a user', function () {
     expect(User::find($user->id))->toBeNull();
 });
 
-it('throws exception when user not found', function () {
+it('throws exception when user not found', function (): void {
     DeleteUserProcess::dispatchSync([
         'userId' => 99999,
     ]);

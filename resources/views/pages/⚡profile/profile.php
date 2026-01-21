@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use Livewire\Attributes\Layout;
@@ -28,20 +30,20 @@ new #[Layout('layouts::app'), Title('Configurações')] class extends Component
 
     public function mount(): void
     {
-        $user = auth()->user();
-        $this->name = $user->name;
+        $user        = auth()->user();
+        $this->name  = $user->name;
         $this->email = $user->email;
     }
 
     public function updateProfile(): void
     {
         $this->validate([
-            'name' => 'required|string|max:255',
+            'name'  => 'required|string|max:255',
             'email' => 'required|email|max:255|unique:users,email,' . auth()->id(),
         ]);
 
-        $user = auth()->user();
-        $user->name = $this->name;
+        $user        = auth()->user();
+        $user->name  = $this->name;
         $user->email = $this->email;
         $user->save();
 
@@ -52,14 +54,15 @@ new #[Layout('layouts::app'), Title('Configurações')] class extends Component
     {
         $this->validate([
             'current_password' => 'required|string',
-            'password' => ['required', 'string', 'confirmed', Password::defaults()],
+            'password'         => ['required', 'string', 'confirmed', Password::defaults()],
         ]);
 
         $user = auth()->user();
 
         // Verify current password
-        if (!Hash::check($this->current_password, $user->password)) {
+        if (! Hash::check($this->current_password, $user->password)) {
             $this->addError('current_password', 'A senha atual está incorreta.');
+
             return;
         }
 
@@ -67,8 +70,8 @@ new #[Layout('layouts::app'), Title('Configurações')] class extends Component
         $user->save();
 
         // Clear password fields
-        $this->current_password = null;
-        $this->password = null;
+        $this->current_password      = null;
+        $this->password              = null;
         $this->password_confirmation = null;
 
         $this->success('Senha alterada com sucesso!');

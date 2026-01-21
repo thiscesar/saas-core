@@ -6,7 +6,7 @@ use App\Models\Invitation;
 use App\Rules\UniqueInvitation;
 use Illuminate\Support\Facades\Validator;
 
-it('allows email when no invitation exists', function () {
+it('allows email when no invitation exists', function (): void {
     $validator = Validator::make(
         ['email' => 'test@example.com'],
         ['email' => ['required', 'email', new UniqueInvitation()]]
@@ -15,7 +15,7 @@ it('allows email when no invitation exists', function () {
     expect($validator->passes())->toBeTrue();
 });
 
-it('allows email when invitation is expired', function () {
+it('allows email when invitation is expired', function (): void {
     Invitation::factory()->expired()->create(['email' => 'test@example.com']);
 
     $validator = Validator::make(
@@ -26,7 +26,7 @@ it('allows email when invitation is expired', function () {
     expect($validator->passes())->toBeTrue();
 });
 
-it('allows email when invitation was accepted', function () {
+it('allows email when invitation was accepted', function (): void {
     Invitation::factory()->accepted()->create(['email' => 'test@example.com']);
 
     $validator = Validator::make(
@@ -37,7 +37,7 @@ it('allows email when invitation was accepted', function () {
     expect($validator->passes())->toBeTrue();
 });
 
-it('rejects email when valid invitation exists', function () {
+it('rejects email when valid invitation exists', function (): void {
     Invitation::factory()->create(['email' => 'test@example.com']);
 
     $validator = Validator::make(

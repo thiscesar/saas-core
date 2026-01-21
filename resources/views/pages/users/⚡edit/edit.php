@@ -33,11 +33,11 @@ new #[Layout('layouts::app'), Title('Editar Usuário')] class extends Component
     public function mount(User $user): void
     {
         // Reload user with trashed to ensure deleted_at is loaded
-        $this->user = User::withTrashed()->with('roles')->findOrFail($user->id);
-        $this->name = $this->user->name;
-        $this->email = $this->user->email;
+        $this->user     = User::withTrashed()->with('roles')->findOrFail($user->id);
+        $this->name     = $this->user->name;
+        $this->email    = $this->user->email;
         $this->is_admin = $this->user->is_admin ?? false;
-        $this->role_id = $this->user->roles->first()?->id;
+        $this->role_id  = $this->user->roles->first()?->id;
     }
 
     public function getRolesProperty()

@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Brain\User\Processes\UpdateUserProcess;
 use App\Models\User;
 
-it('updates a user name and admin status', function () {
+it('updates a user name and admin status', function (): void {
     $user = User::factory()->create([
         'name'     => 'Old Name',
         'email'    => 'old@example.com',
@@ -26,7 +26,7 @@ it('updates a user name and admin status', function () {
     expect($user->is_admin)->toBeTrue();
 });
 
-it('updates user password when editing own account', function () {
+it('updates user password when editing own account', function (): void {
     $user        = User::factory()->create();
     $oldPassword = $user->password;
 
@@ -47,7 +47,7 @@ it('updates user password when editing own account', function () {
     expect($user->password_set_at)->not->toBeNull();
 });
 
-it('does not update password when null', function () {
+it('does not update password when null', function (): void {
     $user        = User::factory()->create();
     $oldPassword = $user->password;
 
@@ -63,7 +63,7 @@ it('does not update password when null', function () {
     expect($user->password)->toBe($oldPassword);
 });
 
-it('syncs user role when role_id is provided', function () {
+it('syncs user role when role_id is provided', function (): void {
     $role1 = App\Models\Role::create(['name' => 'role-1']);
     $role2 = App\Models\Role::create(['name' => 'role-2']);
 
@@ -86,7 +86,7 @@ it('syncs user role when role_id is provided', function () {
     expect($user->hasRole('role-1'))->toBeFalse();
 });
 
-it('removes all roles when role_id is null', function () {
+it('removes all roles when role_id is null', function (): void {
     $role = App\Models\Role::create(['name' => 'test-role']);
 
     $user = User::factory()->create();

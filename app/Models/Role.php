@@ -28,7 +28,7 @@ class Role extends BaseModel
     protected function displayName(): Attribute
     {
         return Attribute::make(
-            get: fn () => ucfirst($this->name)
+            get: fn (): string => ucfirst($this->name)
         );
     }
 }

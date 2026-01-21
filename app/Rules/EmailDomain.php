@@ -22,7 +22,7 @@ class EmailDomain implements ValidationRule
             return;
         }
 
-        $emailDomain = substr(strrchr($value, '@'), 1);
+        $emailDomain = substr(strrchr((string) $value, '@'), 1);
 
         if ($emailDomain !== $allowedDomain) {
             $fail("O email deve ser do domínio {$allowedDomain}.");

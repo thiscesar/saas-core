@@ -5,7 +5,7 @@ declare(strict_types = 1);
 use App\Models\User;
 use Livewire\Livewire;
 
-test('admin can update user name', function () {
+test('admin can update user name', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['name' => 'Old Name']);
 
@@ -20,7 +20,7 @@ test('admin can update user name', function () {
     expect($user->fresh()->name)->toBe('New Name');
 });
 
-test('admin cannot edit another user email', function () {
+test('admin cannot edit another user email', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['email' => 'original@example.com']);
 
@@ -35,7 +35,7 @@ test('admin cannot edit another user email', function () {
     expect($user->fresh()->email)->toBe('original@example.com');
 });
 
-test('admin cannot edit another user password', function () {
+test('admin cannot edit another user password', function (): void {
     $admin       = User::factory()->create(['is_admin' => true]);
     $user        = User::factory()->create();
     $oldPassword = $user->password;
@@ -52,7 +52,7 @@ test('admin cannot edit another user password', function () {
     expect($user->fresh()->password)->toBe($oldPassword);
 });
 
-test('user can edit own password', function () {
+test('user can edit own password', function (): void {
     $user = User::factory()->create();
 
     $this->actingAs($user);
@@ -67,7 +67,7 @@ test('user can edit own password', function () {
     expect($user->fresh()->password_set_at)->not->toBeNull();
 });
 
-test('admin can soft delete user', function () {
+test('admin can soft delete user', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->create(['status' => 'active']);
 
@@ -81,7 +81,7 @@ test('admin can soft delete user', function () {
     expect($user->fresh()->trashed())->toBeTrue();
 });
 
-test('admin cannot delete themselves', function () {
+test('admin cannot delete themselves', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
 
     $this->actingAs($admin);
@@ -92,7 +92,7 @@ test('admin cannot delete themselves', function () {
     expect($admin->fresh()->trashed())->toBeFalse();
 });
 
-test('admin can restore deleted user', function () {
+test('admin can restore deleted user', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->trashed()->create();
 
@@ -106,7 +106,7 @@ test('admin can restore deleted user', function () {
     expect($user->fresh()->trashed())->toBeFalse();
 });
 
-test('users list shows deleted badge', function () {
+test('users list shows deleted badge', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->trashed()->create(['name' => 'Deleted User']);
 
@@ -118,7 +118,7 @@ test('users list shows deleted badge', function () {
         ->assertSee('Removido');
 });
 
-test('users list hides deleted by default', function () {
+test('users list hides deleted by default', function (): void {
     $admin = User::factory()->create(['is_admin' => true]);
     $user  = User::factory()->trashed()->create(['name' => 'Deleted User']);
 
