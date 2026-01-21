@@ -67,10 +67,15 @@ class FindOrCreateUserFromSlackTask extends Task
             session()->forget('pending_invitation_id');
         }
 
-        // Priority 1: Find user by slack_id (already linked)
+        // Priority 1: Find user by slack_id (already linked and active)
         $user = User::where('slack_id', $this->slackId)->first();
 
         if ($user) {
+            // Check if user has activated their account
+            if ($user->status !== 'active') {
+                throw new \Exception('Não foi possível realizar o login. Contate o suporte.');
+            }
+
             // Update tokens for existing Slack user
             $user->update([
                 'slack_access_token'  => $this->accessToken,
@@ -83,7 +88,14 @@ class FindOrCreateUserFromSlackTask extends Task
             return $this;
         }
 
+        // Priority 2: Check if user exists by email but not activated
+        $user = User::where('email', $this->email)->first();
+
+        if ($user && $user->status === 'pending') {
+            throw new \Exception('Não foi possível realizar o login. Contate o suporte.');
+        }
+
         // No valid user found - require invitation
-        throw new \Exception('Você precisa de um convite para acessar o sistema. Contate o administrador.');
+        throw new \Exception('Não foi possível realizar o login. Contate o suporte.');
     }
 }

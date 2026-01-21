@@ -7,6 +7,12 @@
                 </x-alert>
             @endif
 
+            @if (session('error'))
+                <x-alert icon="o-exclamation-triangle" class="alert-error mb-4">
+                    {{ session('error') }}
+                </x-alert>
+            @endif
+
             <x-form wire:submit="login">
                 <x-input
                     label="E-mail"
@@ -44,12 +50,6 @@
                 <img src="{{ asset('images/logos/slack.svg') }}" alt="Slack" class="h-5 w-5">
                 <span>Entrar com Slack</span>
             </a>
-
-            @if (session('error'))
-                <x-alert icon="o-exclamation-triangle" class="alert-error mt-4">
-                    {{ session('error') }}
-                </x-alert>
-            @endif
         </x-card>
     </div>
 </div>
