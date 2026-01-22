@@ -33,7 +33,10 @@ class Invitation extends BaseModel
      */
     public function isExpired(): bool
     {
-        return $this->expires_at->isPast();
+        /** @var \Illuminate\Support\Carbon $expiresAt */
+        $expiresAt = $this->expires_at;
+
+        return $expiresAt->isPast();
     }
 
     /**

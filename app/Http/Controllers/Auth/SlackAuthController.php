@@ -19,9 +19,10 @@ class SlackAuthController extends Controller
      */
     public function redirect(): RedirectResponse
     {
-        return Socialite::driver('slack')
-            ->stateless()
-            ->redirect();
+        /** @var \Laravel\Socialite\Two\SlackProvider $driver */
+        $driver = Socialite::driver('slack');
+
+        return $driver->stateless()->redirect();
     }
 
     /**
@@ -30,7 +31,11 @@ class SlackAuthController extends Controller
     public function callback(): RedirectResponse
     {
         try {
-            $slackUser = Socialite::driver('slack')->stateless()->user();
+            /** @var \Laravel\Socialite\Two\SlackProvider $driver */
+            $driver = Socialite::driver('slack');
+
+            /** @var \Laravel\Socialite\Two\User $slackUser */
+            $slackUser = $driver->stateless()->user();
 
             SlackAuthProcess::dispatchSync([
                 'slackId'      => $slackUser->getId(),
