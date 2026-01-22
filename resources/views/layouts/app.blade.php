@@ -10,7 +10,7 @@
 
         @livewireStyles
     </head>
-    <body class="min-h-screen font-sans antialiased">
+    <body class="min-h-screen font-sans antialiased bg-base-200">
         {{-- Mobile Nav (hidden on desktop) --}}
         <x-nav sticky class="lg:hidden">
             <x-slot:brand>
@@ -39,14 +39,29 @@
 
                     {{-- User Profile Section --}}
                     <div class="mary-sidebar-section px-5 py-4">
-                        <div class="flex items-center justify-center gap-3">
-                            <x-user-avatar :user="auth()->user()" class="!w-10" />
+                        <x-dropdown>
+                            <x-slot:trigger>
+                                <div class="flex items-center justify-center gap-3 cursor-pointer hover:bg-base-300 rounded-lg p-2 transition-colors">
+                                    <x-user-avatar :user="auth()->user()" class="!w-10" />
 
-                            <div class="mary-hideable min-w-0 flex-1">
-                                <div class="truncate text-sm font-semibold">{{ auth()->user()->name }}</div>
-                                <div class="truncate text-xs text-base-content/70">{{ auth()->user()->email }}</div>
-                            </div>
-                        </div>
+                                    <div class="mary-hideable min-w-0 flex-1">
+                                        <div class="truncate text-sm font-semibold">{{ auth()->user()->name }}</div>
+                                        <div class="truncate text-xs text-base-content/70">{{ auth()->user()->email }}</div>
+                                    </div>
+
+                                    <x-icon name="o-chevron-down" class="mary-hideable w-4 h-4" />
+                                </div>
+                            </x-slot:trigger>
+
+                            <x-menu-item title="Minha Conta" icon="o-user-circle" link="/settings" />
+
+                            <x-menu-separator />
+
+                            <form action="/logout" method="POST">
+                                @csrf
+                                <x-menu-item title="Sair" icon="o-arrow-right-on-rectangle" onclick="this.closest('form').submit()" />
+                            </form>
+                        </x-dropdown>
                     </div>
 
                     <x-menu-separator />
@@ -63,40 +78,10 @@
 
                         <x-menu-separator />
 
-                        {{-- Settings --}}
-                        <x-menu-item title="Configurações" icon="o-cog-6-tooth" link="/settings" />
-
                         {{-- Help --}}
                         <x-menu-item title="Ajuda" icon="o-question-mark-circle" link="/help" />
                     </x-menu>
 
-                    {{-- Spacer to push content below to bottom --}}
-                    <div class="flex-1"></div>
-
-                    {{-- Theme Toggle & Logout (bottom of sidebar) --}}
-                    <x-menu-separator />
-
-                    <div class="mary-sidebar-section px-5 py-4 space-y-3">
-                        {{-- Theme Toggle --}}
-                        <div class="flex items-center justify-center gap-2">
-                            <span class="mary-hideable text-sm font-medium">Tema</span>
-                            <x-theme-toggle class="!w-auto" />
-                        </div>
-
-                        {{-- Logout Button --}}
-                        <form action="/logout" method="POST">
-                            @csrf
-                            <x-button
-                                icon="o-arrow-right-on-rectangle"
-                                icon-class="w-5 h-5"
-                                type="submit"
-                                class="btn-error btn-md w-full justify-center"
-                                no-wire-navigate
-                            >
-                                <span class="mary-hideable ml-2">Sair</span>
-                            </x-button>
-                        </form>
-                    </div>
                 </div>
             </x-slot:sidebar>
 
