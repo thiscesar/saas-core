@@ -1,11 +1,13 @@
 <div>
     {{-- Page Header --}}
-    <div class="mb-6 px-5 lg:px-6">
+    <div class="mb-6">
         <h1 class="text-2xl font-bold lg:text-3xl">Novo Usuário</h1>
     </div>
 
+    <x-hr/>
+
     {{-- Main Content --}}
-    <div class="px-5 lg:px-6">
+    <div>
         <div class="mx-auto max-w-2xl">
             <x-card class="bg-base-100 shadow-sm">
             <x-form wire:submit="save">

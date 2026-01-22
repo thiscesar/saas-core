@@ -1,6 +1,6 @@
 <div>
     {{-- Page Header --}}
-    <div class="mb-5 px-5 lg:px-6">
+    <div class="mb-5">
         <div class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <h1 class="text-2xl font-bold lg:text-3xl">Usuários</h1>
 
@@ -27,11 +27,12 @@
         </div>
     </div>
 
+
     {{-- Header Divider --}}
-    <div class="mb-6 border-t border-base-300"></div>
+    <x-hr/>
 
     {{-- Main Content --}}
-    <div class="px-5 lg:px-6">
+    <div>
         <x-card class="bg-base-100 shadow-sm">
             <x-table
                 :headers="[

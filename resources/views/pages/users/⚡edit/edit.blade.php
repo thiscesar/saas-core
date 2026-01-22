@@ -1,11 +1,13 @@
 <div>
     {{-- Page Header --}}
-    <div class="mb-6 px-5 lg:px-6">
+    <div class="mb-6">
         <h1 class="text-2xl font-bold lg:text-3xl">Editar Usuário</h1>
     </div>
 
+    <x-hr/>
+
     {{-- Main Content --}}
-    <div class="px-5 lg:px-6">
+    <div class="px-5 pb-8 lg:px-6">
         <div class="mx-auto max-w-2xl">
             {{-- User Profile Header --}}
             <x-card class="mb-6 bg-base-100 shadow-sm">
