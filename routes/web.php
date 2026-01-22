@@ -23,7 +23,7 @@ Route::get('/auth/slack/callback', [SlackAuthController::class, 'callback'])
 Route::middleware('auth')->group(function (): void {
     Route::livewire('/auth/set-password', 'pages::auth.set-password')->name('auth.set-password');
     Route::livewire('/dashboard', 'pages::dashboard')->name('dashboard');
-    Route::livewire('/settings', 'pages::profile')->name('settings');
+    Route::livewire('/settings', 'pages::settings')->name('settings');
 
     Route::post('/logout', function (): Illuminate\Routing\Redirector | Illuminate\Http\RedirectResponse {
         auth()->logout();
