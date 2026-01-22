@@ -33,3 +33,27 @@ it('returns null when avatar url is not set', function (): void {
 
     expect($user->getAvatarUrl())->toBeNull();
 });
+
+it('belongs to an invitation', function (): void {
+    $invitation = App\Models\Invitation::factory()->create();
+    $user       = User::factory()->create(['invitation_id' => $invitation->id]);
+
+    expect($user->invitation)->toBeInstanceOf(App\Models\Invitation::class);
+    expect($user->invitation->id)->toBe($invitation->id);
+});
+
+it('can have null invitation', function (): void {
+    $user = User::factory()->create(['invitation_id' => null]);
+
+    expect($user->invitation)->toBeNull();
+});
+
+it('checks if user has direct permission', function (): void {
+    $user       = User::factory()->create();
+    $permission = App\Models\Permission::factory()->create(['name' => 'edit-posts']);
+
+    $user->permissions()->attach($permission);
+
+    expect($user->hasPermission('edit-posts'))->toBeTrue();
+    expect($user->hasPermission('delete-posts'))->toBeFalse();
+});

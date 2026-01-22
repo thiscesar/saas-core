@@ -44,3 +44,29 @@ it('hashes the password when creating a user', function (): void {
     expect($user->password)->not->toBe('password123');
     expect(Hash::check('password123', $user->password))->toBeTrue();
 });
+
+it('creates a pending user with invitation id', function (): void {
+    $invitation = App\Models\Invitation::factory()->create();
+
+    CreateUserProcess::dispatchSync([
+        'name'         => 'Pending User',
+        'email'        => 'pending@example.com',
+        'invitationId' => $invitation->id,
+    ]);
+
+    $user = User::where('email', 'pending@example.com')->first();
+    expect($user->status)->toBe('pending');
+    expect($user->invitation_id)->toBe($invitation->id);
+});
+
+it('creates an active user without invitation id', function (): void {
+    CreateUserProcess::dispatchSync([
+        'name'     => 'Active User',
+        'email'    => 'active@example.com',
+        'password' => 'password123',
+    ]);
+
+    $user = User::where('email', 'active@example.com')->first();
+    expect($user->status)->toBe('active');
+    expect($user->invitation_id)->toBeNull();
+});

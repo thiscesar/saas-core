@@ -115,3 +115,34 @@ it('regenerates session after oauth login', function (): void {
 
     expect($newSessionId)->not->toBe($oldSessionId);
 });
+
+it('redirects to set password when user has no password set', function (): void {
+    $user = User::factory()->create([
+        'slack_id'            => 'U99999999',
+        'email'               => 'nopass@example.com',
+        'password_set_at'     => null,
+        'slack_access_token'  => 'old-token',
+        'slack_refresh_token' => 'old-refresh',
+    ]);
+
+    $abstractUser = mock(SocialiteUserContract::class);
+    $abstractUser->shouldReceive('getId')->andReturn('U99999999');
+    $abstractUser->shouldReceive('getEmail')->andReturn('nopass@example.com');
+    $abstractUser->shouldReceive('getName')->andReturn('No Password User');
+    $abstractUser->shouldReceive('getAvatar')->andReturn('https://example.com/avatar.jpg');
+    $abstractUser->token        = 'new-token';
+    $abstractUser->refreshToken = 'new-refresh';
+
+    Socialite::shouldReceive('driver')
+        ->with('slack')
+        ->andReturnSelf()
+        ->shouldReceive('stateless')
+        ->andReturnSelf()
+        ->shouldReceive('user')
+        ->andReturn($abstractUser);
+
+    $response = $this->get(route('auth.slack.callback'));
+
+    $response->assertRedirect('/auth/set-password');
+    $this->assertAuthenticatedAs($user);
+});
